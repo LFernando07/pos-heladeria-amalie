@@ -1,0 +1,31 @@
+.header {
+  text-align: center;
+  padding: 25px 15px;
+  background: linear-gradient(90deg, #ff7e5f, #feb47b);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  border-radius: 0 0 18px 18px;
+}
+
+.header-title {
+  font-size: 2.3rem;
+  color: white;
+  font-weight: 700;
+  margin: 0;
+  letter-spacing: 1px;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* Estilos para el nuevo botón/link */
+.add-product-link {
+  display: flex;
+  align-items: flex-start;
+  max-width: 200px;
+  gap: 8px;
+  padding: 10px 15px;
+  background-color: #b95fa3; 
+  color: white;
+  text-decoration: none; /* Quita el subrayado del enlace */
+  border-radius: 8px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}

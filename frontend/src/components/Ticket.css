@@ -1,0 +1,388 @@
+.ticket-container {
+  font-family: "Inter", sans-serif;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.ticket {
+  background: #ffffff;
+  border-radius: 24px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.07);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* --- ENCABEZADO --- */
+.ticket-header {
+  background: linear-gradient(135deg, #ff7e5f, #feb47b);
+  padding: 8px;
+  text-align: center;
+  color: #fff;
+  border-radius: 0px 0px 0 0;
+  flex-shrink: 0;
+}
+.ticket-header h1 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.ticket-header p {
+  font-size: 0.8rem;
+  margin: 2px 0;
+}
+
+/* --- LISTA DE PRODUCTOS --- */
+.items {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 1rem;
+}
+
+.items-header {
+  display: grid;
+  grid-template-columns: 1fr 120px 90px;
+  font-weight: 600;
+  border-bottom: 2px solid #f5eae0;
+  padding-bottom: 6px;
+  margin-bottom: 8px;
+  color: #444;
+  font-size: 0.8rem;
+  text-align: center;
+}
+.items-header span:first-child {
+  text-align: left;
+}
+
+.item {
+  display: grid;
+  grid-template-columns: 1fr 120px 90px;
+  align-items: center;
+  font-size: 0.9rem;
+  color: #444;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid #f8efe8;
+}
+.item span:first-child {
+  text-align: left;
+  font-weight: 500;
+}
+.item .subtotal-col {
+  text-align: center;
+  font-weight: 700;
+  color: #333;
+}
+
+/* --- BOTONES DE CANTIDAD --- */
+.quantity-control {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+}
+
+.quantity-control span {
+  font-size: 1rem;
+  font-weight: bold;
+  min-width: 25px;
+  text-align: center;
+}
+.quantity-control button {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  border: 2px solid #ffbca8;
+  background-color: #fff5f2;
+  color: #ff6b6b;
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+.quantity-control button:hover {
+  background-color: #ff6b6b;
+  border-color: #ff6b6b;
+  color: white;
+  transform: scale(1.05);
+}
+.quantity-control button:active {
+  transform: scale(0.95);
+}
+
+/* --- SECCIÓN DE PAGO --- */
+.payment-details {
+  padding: 1rem 1.5rem;
+  border-top: 2px solid #f1f1f1;
+  background-color: #fdfdfd;
+  flex-shrink: 0;
+}
+
+.total {
+  font-size: 1.6rem;
+  font-weight: 800;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+.total h2 {
+  margin: 0;
+}
+
+/* --- MONTO RECIBIDO --- */
+.amount-received {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+.amount-received label {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #555;
+}
+.amount-received input {
+  width: 160px;
+  padding: 0.75rem;
+  border-radius: 12px;
+  border: 2px solid #ffbca8;
+  text-align: right;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+  cursor: pointer;
+  background-color: #fff;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.amount-received input:hover,
+.amount-received input:focus {
+  border-color: #ff7e5f;
+  box-shadow: 0 0 0 3px rgba(255, 126, 95, 0.2);
+}
+
+.change-display {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #fff0f0;
+  padding: 1rem;
+  border-radius: 12px;
+}
+.change-display h3 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #c0392b;
+}
+
+/* --- BOTONES DE ACCIÓN (NUEVO DISEÑO) --- */
+.actions {
+  display: flex;
+  gap: 1rem;
+  padding: 1.25rem 1.5rem;
+  border-top: 1px solid #f5eae0; /* Línea más suave */
+  background-color: #fff;
+  flex-shrink: 0;
+}
+
+/* Estilos comunes para ambos botones */
+.cancel-btn,
+.pay-btn {
+  flex: 1;
+  padding: 16px;
+  border-radius: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.25s ease-in-out;
+  font-size: 1rem;
+  border: 2px solid transparent; /* Borde transparente para alinear tamaños */
+}
+
+/* Cancelar orden: Estilo "outline" sutil */
+.cancel-btn {
+  background-color: #fff5f2;
+  border-color: #ffc9c9;
+  color: #e63946;
+}
+.cancel-btn:hover {
+  background-color: #e63946;
+  border-color: #e63946;
+  color: #fff;
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(230, 57, 70, 0.2);
+}
+
+/* Cobrar efectivo: Estilo principal con gradiente */
+.pay-btn {
+  background: linear-gradient(135deg, #ff7e5f, #feb47b);
+  color: white;
+  box-shadow: 0 4px 15px rgba(254, 180, 123, 0.4);
+}
+.pay-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(255, 126, 95, 0.5);
+  background: linear-gradient(135deg, #ff8a70, #fec08c);
+}
+
+
+/* --- TECLADO NUMÉRICO --- */
+.keypad-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+.keypad {
+  width: 100%;
+  max-width: 340px;
+  background-color: #fff;
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  animation: keypad-appear 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.keypad-header {
+  padding: 1rem 1.25rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(135deg, #ff7e5f, #feb47b);
+  color: white;
+  border-radius: 20px 20px 0 0;
+}
+
+.keypad-header span {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.keypad-close-btn {
+  border: none;
+  background: none;
+  font-size: 1.8rem;
+  color: white;
+  cursor: pointer;
+  opacity: 0.8;
+}
+.keypad-close-btn:hover {
+  opacity: 1;
+}
+
+.keypad-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  padding: 12px;
+}
+
+.keypad-grid button {
+  height: 68px;
+  border: none;
+  border-radius: 16px;
+  font-size: 1.8rem;
+  background-color: #f8f9fa;
+  color: #202124;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: 1px solid #f1f1f1;
+}
+.keypad-grid button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border-color: #e0e;
+}
+.keypad-grid button:active {
+  transform: translateY(0);
+  box-shadow: none;
+  background-color: #e8eaed;
+}
+
+.keypad-clear-btn {
+  grid-column: span 3;
+  background-color: #fff0f0 !important;
+  color: #c0392b !important;
+  font-weight: bold;
+}
+.keypad-clear-btn:hover {
+  background-color: #e74c3c !important;
+  color: white !important;
+}
+
+/* --- ANIMACIÓN DE ÉXITO --- */
+.success-toast {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(30, 30, 30, 0.9);
+  color: white;
+  padding: 20px 30px;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  z-index: 3000;
+  animation: fade-in-out 2s forwards;
+}
+
+.success-toast p {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.success-icon {
+  width: 60px;
+  height: 60px;
+  animation: scale-in 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+.success-icon svg {
+  width: 100%;
+  height: 100%;
+  fill: #4caf50;
+}
+
+@keyframes fade-in-out {
+  0% { opacity: 0; }
+  20% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@keyframes scale-in {
+  from { transform: scale(0); }
+  to { transform: scale(1); }
+}
+
+/* --- RESPONSIVIDAD --- */
+@media (max-width: 992px) {
+  .ticket {
+    max-height: 500px;
+  }
+  .items-header,
+  .item {
+    grid-template-columns: 1fr 100px 70px;
+  }
+  .quantity-control button {
+    width: 30px;
+    height: 30px;
+    font-size: 1.1rem;
+  }
+}
