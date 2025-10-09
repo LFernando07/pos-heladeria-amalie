@@ -1,6 +1,6 @@
 body {
   margin: 0;
-  font-family: 'Segoe UI', sans-serif;
+  font-family: "Segoe UI", sans-serif;
   background: #fff5e9;
   color: #444;
 }
@@ -23,7 +23,11 @@ body {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, #d1c8bd, #e8ded2); /* Un poco más oscuro al pasar el mouse */
+  background: linear-gradient(
+    180deg,
+    #d1c8bd,
+    #e8ded2
+  ); /* Un poco más oscuro al pasar el mouse */
 }
 
 /* Firefox */

@@ -12,6 +12,7 @@
   height: 100%;
   display: flex;
   flex-direction: column;
+  margin-bottom: 3rem;
 }
 
 /* --- ENCABEZADO --- */
@@ -115,19 +116,19 @@
 
 /* --- SECCIÓN DE PAGO --- */
 .payment-details {
-  padding: 1rem 1.5rem;
+  padding: 0.8rem 1rem;
   border-top: 2px solid #f1f1f1;
   background-color: #fdfdfd;
   flex-shrink: 0;
 }
 
 .total {
-  font-size: 1.6rem;
+  font-size: 1rem;
   font-weight: 800;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
+  margin-bottom: 0.6rem;
 }
 .total h2 {
   margin: 0;
@@ -138,10 +139,10 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
+  margin-bottom: 0.6rem;
 }
 .amount-received label {
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: 600;
   color: #555;
 }
@@ -169,12 +170,12 @@
   justify-content: space-between;
   align-items: center;
   background-color: #fff0f0;
-  padding: 1rem;
+  padding: 0.6rem;
   border-radius: 12px;
 }
 .change-display h3 {
   margin: 0;
-  font-size: 1.5rem;
+  font-size: 1.1rem;
   font-weight: 800;
   color: #c0392b;
 }
@@ -231,7 +232,6 @@
   box-shadow: 0 6px 20px rgba(255, 126, 95, 0.5);
   background: linear-gradient(135deg, #ff8a70, #fec08c);
 }
-
 
 /* --- TECLADO NUMÉRICO --- */
 .keypad-backdrop {
@@ -360,15 +360,27 @@
 }
 
 @keyframes fade-in-out {
-  0% { opacity: 0; }
-  20% { opacity: 1; }
-  80% { opacity: 1; }
-  100% { opacity: 0; }
+  0% {
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
 }
 
 @keyframes scale-in {
-  from { transform: scale(0); }
-  to { transform: scale(1); }
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
 }
 
 /* --- RESPONSIVIDAD --- */

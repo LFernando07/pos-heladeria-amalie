@@ -1,5 +1,5 @@
 import { useState } from "react";
-import './Tipos.css';
+import "./Tipos.css";
 
 const tiposData = [
   { nombre: "Fresa", precio: 0, imagen: "/images/sabores/fresa.jpg" },
@@ -38,10 +38,15 @@ export default function Tipos({ heladoBase, onClose, onAddToCart }) {
       return;
     }
 
-    const precioExtra = tiposSeleccionados.reduce((total, s) => total + s.precio, 0);
+    const precioExtra = tiposSeleccionados.reduce(
+      (total, s) => total + s.precio,
+      0
+    );
     const precioCobertura = conCobertura ? 5 : 0; // Asumimos un precio para la cobertura
     const nombreTipos = tiposSeleccionados.map((s) => s.nombre).join(", ");
-    const nombreFinal = `${heladoBase.nombre} (${nombreTipos})${conCobertura ? " con cobertura" : ""}`;
+    const nombreFinal = `${heladoBase.nombre} (${nombreTipos})${
+      conCobertura ? " con cobertura" : ""
+    }`;
 
     const productoFinal = {
       ...heladoBase,
@@ -61,9 +66,8 @@ export default function Tipos({ heladoBase, onClose, onAddToCart }) {
   return (
     <div className="modal-backdrop" onClick={onClose}>
       <div className="tipo-container" onClick={(e) => e.stopPropagation()}>
-        
         <div className="titulo">
-            Elige los sabores para tu {heladoBase.nombre}
+          Elige los sabores para tu {heladoBase.nombre}
         </div>
 
         <div className="tipo-grid">
@@ -72,10 +76,15 @@ export default function Tipos({ heladoBase, onClose, onAddToCart }) {
             // y se le aplica la clase 'selected' dinámicamente.
             <div
               key={tipo.nombre}
-              className={`tipo-card ${isChecked(tipo.nombre) ? 'selected' : ''}`}
+              className={`tipo-card ${
+                isChecked(tipo.nombre) ? "selected" : ""
+              }`}
               onClick={() => toggleTipo(tipo)}
             >
-              <img src={tipo.imagen || '/images/placeholder.png'} alt={tipo.nombre} />
+              <img
+                src={tipo.imagen || "./images/placeholder.png"}
+                alt={tipo.nombre}
+              />
               <div className="nombre">{tipo.nombre}</div>
               {tipo.precio > 0 && <div className="precio">+${tipo.precio}</div>}
               {/* Dejamos el input oculto por accesibilidad, pero ya no controla el click */}
@@ -102,12 +111,12 @@ export default function Tipos({ heladoBase, onClose, onAddToCart }) {
           </div>
         </label>
 
-
         <div className="actions">
-          <button className="back-button" onClick={onClose}>Cancelar</button>
+          <button className="back-button" onClick={onClose}>
+            Cancelar
+          </button>
           <button onClick={handleAgregarHelado}>Agregar al Carrito</button>
         </div>
-
       </div>
     </div>
   );

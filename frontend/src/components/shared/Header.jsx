@@ -1,7 +1,7 @@
-import React from 'react';
-import { Link } from 'react-router'; // 1. Importa Link para la navegación
-import { FaPlusCircle } from 'react-icons/fa'; // Importa un icono
-import './Header.css';
+import React from "react";
+import { Link } from "react-router"; // 1. Importa Link para la navegación
+import { FaPlusCircle } from "react-icons/fa"; // Importa un icono
+import "./Header.css";
 
 export default function Header() {
   return (
