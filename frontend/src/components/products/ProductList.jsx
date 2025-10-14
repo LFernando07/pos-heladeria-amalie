@@ -1,7 +1,7 @@
 import ProductCard from "./ProductCard";
 import "./ProductList.css";
 
-export default function ProductList({ productos, onAdd }) {
+export const ProductList = ({ productos, onAdd }) => {
   return (
     <div className="product-list">
       {productos.map((producto) => (
@@ -13,4 +13,4 @@ export default function ProductList({ productos, onAdd }) {
       ))}
     </div>
   );
-}
+};

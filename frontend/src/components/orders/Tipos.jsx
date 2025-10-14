@@ -1,20 +1,9 @@
 import { useState } from "react";
+import { useFlavours } from "../../hooks/useFlavours";
 import "./Tipos.css";
 
-const tiposData = [
-  { nombre: "Fresa", precio: 0, imagen: "/images/sabores/fresa.jpg" },
-  { nombre: "Chocolate", precio: 0, imagen: "/images/sabores/chocolate.jpg" },
-  { nombre: "Vainilla", precio: 0, imagen: "/images/sabores/vainilla.jpg" },
-  { nombre: "Nuez", precio: 0, imagen: "/images/sabores/nuez.jpg" },
-  { nombre: "Yogurt", precio: 0, imagen: "/images/sabores/yogurt.jpg" },
-  { nombre: "Limón", precio: 0, imagen: "/images/sabores/limon.jpg" },
-  { nombre: "Mango", precio: 0, imagen: "/images/sabores/mango.jpg" },
-  { nombre: "Uva", precio: 0, imagen: "/images/sabores/uva.jpg" },
-  { nombre: "Galleta Oreo", precio: 0, imagen: "/images/sabores/oreo.jpg" },
-  { nombre: "Chicle", precio: 0, imagen: "/images/sabores/chicle.jpg" },
-];
-
-export default function Tipos({ heladoBase, onClose, onAddToCart }) {
+export const Tipos = ({ productoBase, onClose, onAddToCart }) => {
+  const { sabores: tiposData } = useFlavours(productoBase.categoria_id);
   const [tiposSeleccionados, setTiposSeleccionados] = useState([]);
   const [conCobertura, setConCobertura] = useState(false);
 
@@ -38,20 +27,16 @@ export default function Tipos({ heladoBase, onClose, onAddToCart }) {
       return;
     }
 
-    const precioExtra = tiposSeleccionados.reduce(
-      (total, s) => total + s.precio,
-      0
-    );
     const precioCobertura = conCobertura ? 5 : 0; // Asumimos un precio para la cobertura
     const nombreTipos = tiposSeleccionados.map((s) => s.nombre).join(", ");
-    const nombreFinal = `${heladoBase.nombre} (${nombreTipos})${
+    const nombreFinal = `${productoBase.nombre} (${nombreTipos})${
       conCobertura ? " con cobertura" : ""
     }`;
 
     const productoFinal = {
-      ...heladoBase,
+      ...productoBase,
       nombre: nombreFinal,
-      precio: heladoBase.precio + precioExtra + precioCobertura,
+      precio: productoBase.precio + precioCobertura,
       id: Date.now(),
     };
 
@@ -67,7 +52,7 @@ export default function Tipos({ heladoBase, onClose, onAddToCart }) {
     <div className="modal-backdrop" onClick={onClose}>
       <div className="tipo-container" onClick={(e) => e.stopPropagation()}>
         <div className="titulo">
-          Elige los sabores para tu {heladoBase.nombre}
+          Elige los sabores para tu {productoBase.nombre}
         </div>
 
         <div className="tipo-grid">
@@ -81,10 +66,7 @@ export default function Tipos({ heladoBase, onClose, onAddToCart }) {
               }`}
               onClick={() => toggleTipo(tipo)}
             >
-              <img
-                src={tipo.imagen || "./images/placeholder.png"}
-                alt={tipo.nombre}
-              />
+              <img src={tipo.imagen} alt={tipo.nombre} />
               <div className="nombre">{tipo.nombre}</div>
               {tipo.precio > 0 && <div className="precio">+${tipo.precio}</div>}
               {/* Dejamos el input oculto por accesibilidad, pero ya no controla el click */}
@@ -98,26 +80,30 @@ export default function Tipos({ heladoBase, onClose, onAddToCart }) {
         </div>
 
         {/*estructura para el interruptor de cobertura */}
-        <label className="opcion">
-          <span className="opcion-label">Cobertura de chocolate </span>
-          {/* El input está oculto, pero la etiqueta lo activa */}
-          <input
-            type="checkbox"
-            checked={conCobertura}
-            onChange={() => setConCobertura(!conCobertura)}
-          />
-          <div className="toggle-switch">
-            <span className="slider"></span>
-          </div>
-        </label>
+        {productoBase.categoria === "Helados" && (
+          <label className="opcion">
+            <span className="opcion-label">Cobertura de chocolate </span>
+            {/* El input está oculto, pero la etiqueta lo activa */}
+            <input
+              type="checkbox"
+              checked={conCobertura}
+              onChange={() => setConCobertura(!conCobertura)}
+            />
+            <div className="toggle-switch">
+              <span className="slider"></span>
+            </div>
+          </label>
+        )}
 
         <div className="actions">
           <button className="back-button" onClick={onClose}>
             Cancelar
           </button>
-          <button onClick={handleAgregarHelado}>Agregar al Carrito</button>
+          <button className="flavours-sucess" onClick={handleAgregarHelado}>
+            Agregar al Carrito
+          </button>
         </div>
       </div>
     </div>
   );
-}
+};

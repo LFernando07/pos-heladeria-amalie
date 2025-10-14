@@ -8,12 +8,14 @@ export const useDateTime = () => {
     return () => clearInterval(timer);
   }, []);
 
+  // Formato de fecha
   const formattedDate = currentDateTime.toLocaleDateString("es-MX", {
     day: "2-digit",
     month: "2-digit",
     year: "numeric",
   });
 
+  // Formato de hora
   const formattedTime = currentDateTime.toLocaleTimeString("es-MX", {
     hour: "2-digit",
     minute: "2-digit",

@@ -7,3 +7,15 @@ export const fetchProducts = async () => {
 
   return result;
 };
+
+export const createProduct = async (productData) => {
+  const response = await fetch("http://localhost:3001/api/productos", {
+    method: "POST",
+    // No se especifica 'Content-Type'. El navegador lo hará automáticamente por nosotros.
+    body: productData,
+  });
+
+  if (!response.ok) {
+    throw new Error("Ocurrió un error al guardar el producto.");
+  }
+};

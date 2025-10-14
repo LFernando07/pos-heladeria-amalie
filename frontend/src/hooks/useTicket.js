@@ -14,7 +14,7 @@ export const useTicket = (items, onClear) => {
   const { montoRecibido, cambio, handleKeyPress, resetPayment } =
     usePayment(total);
 
-  // Calcular total cuando cambian los items
+  // Calcular total a pagar cuando cambian los "n" items
   useEffect(() => {
     const newTotal = items.reduce(
       (acc, product) => acc + product.precio * product.cantidad,
@@ -26,11 +26,12 @@ export const useTicket = (items, onClear) => {
   const handleProcessPayment = async () => {
     const recibido = parseFloat(montoRecibido) || 0;
 
-    // Validaciones
+    // Validaciones si la orden esta vacia
     if (items.length === 0) {
       alert("No hay productos en la orden.");
       return;
     }
+    // Validacion si el dinero dado "escrito" es menor al pagar
     if (recibido < total) {
       alert("El monto recibido es insuficiente.");
       return;
@@ -42,24 +43,27 @@ export const useTicket = (items, onClear) => {
       // Guardar venta en el servidor
       const result = await createSale({
         total,
-        date: formattedDate,
-        time: formattedTime,
-        employee: "Jake Ponciano", // TODO: Obtener del contexto de usuario
+        fecha: formattedDate,
+        hora: formattedTime,
+        empleado_id: 2 /*"Jake Ponciano"*/, // TODO: Obtener del contexto de usuario
         pagado: recibido,
         cambio,
-        products: items,
+        productos: items,
       });
+
+      const digitsDate = formattedDate.replace(/\//g, "");
 
       // Generar PDF con el folio real
       generatePdf({
-        folioVenta: result.ventaId,
+        id: digitsDate + result.ventaId,
+        folioVenta: result.folio,
         items,
         total,
         formattedDate,
         formattedTime,
         montoRecibido: recibido,
         cambio,
-        nombreEmpleado: "Jake Ponciano",
+        nombreEmpleado: "Jake Ponciano", // TODO: Cambiar por el nombre del contexto
       });
 
       // Mostrar toast de éxito

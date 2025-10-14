@@ -60,7 +60,11 @@
 /* --- Botón --- */
 .product-card button {
   width: 100%; /* Ocupar todo el ancho */
-  background: linear-gradient(90deg, #ff5f6d, #ffc371); /* degradado más moderno */
+  background: linear-gradient(
+    90deg,
+    #ff5f6d,
+    #ffc371
+  ); /* degradado más moderno */
   color: rgba(255, 255, 255, 0.974);
   border: none;
   padding: 0.8rem 0;

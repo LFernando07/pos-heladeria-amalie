@@ -1,14 +1,20 @@
-// src/features/sales/components/Ticket.jsx
-import { useTicket } from "../../hooks/useTicket";
 import { NumericKeypad } from "./NumericKeypad";
-import { SuccessToast } from "./SuccessToast";
-import "./Ticket.css";
+import { SuccessToast } from "../shared/SuccessToast";
+
+import { useTicket } from "../../hooks/useTicket";
 import { TicketActions } from "./TicketActions";
 import { TicketHeader } from "./TicketHeader";
 import { TicketItems } from "./TicketItems";
 import { TicketPaymentDetails } from "./TicketPaymentDetails";
+import "./Ticket.css";
 
-const Ticket = ({ items, onClear, onIncrement, onDecrement }) => {
+export const Ticket = ({
+  items,
+  onClear,
+  onIncrement,
+  onDecrement,
+  onRemove,
+}) => {
   const {
     total,
     montoRecibido,
@@ -40,6 +46,7 @@ const Ticket = ({ items, onClear, onIncrement, onDecrement }) => {
             items={items}
             onIncrement={onIncrement}
             onDecrement={onDecrement}
+            onRemove={onRemove}
           />
 
           <TicketPaymentDetails
@@ -64,9 +71,7 @@ const Ticket = ({ items, onClear, onIncrement, onDecrement }) => {
         />
       )}
 
-      {showSuccessToast && <SuccessToast />}
+      {showSuccessToast && <SuccessToast mensaje={"Venta registrada"} />}
     </>
   );
 };
-
-export default Ticket;

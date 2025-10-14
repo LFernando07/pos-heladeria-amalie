@@ -3,16 +3,14 @@ import { useState } from "react";
 export const useCart = () => {
   const [cart, setCart] = useState([]); // El carrito empieza vacío
 
-  // --- LÓGICA DEL CARRITO MODIFICADA ---
-
   const addToCart = (productoAAgregar) => {
     setCart((prevCarrito) => {
-      // 1. Revisa si el producto ya existe en el carrito
+      // Revisa si el producto ya existe en el carrito
       const productoExistente = prevCarrito.find(
         (item) => item.id === productoAAgregar.id
       );
 
-      // 2. Si existe, incrementa su cantidad
+      // Si existe, incrementa su cantidad
       if (productoExistente) {
         return prevCarrito.map((item) =>
           item.id === productoAAgregar.id
@@ -21,7 +19,7 @@ export const useCart = () => {
         );
       }
 
-      // 3. Si no existe, lo agrega al carrito con cantidad 1
+      // Si no existe, lo agrega al carrito con cantidad 1
       return [...prevCarrito, { ...productoAAgregar, cantidad: 1 }];
     });
   };
@@ -54,6 +52,12 @@ export const useCart = () => {
     });
   };
 
+  const removeToCart = (productId) => {
+    setCart((prevCarrito) =>
+      prevCarrito.filter((item) => item.id !== productId)
+    );
+  };
+
   const clearCart = () => {
     setCart([]);
   };
@@ -63,6 +67,7 @@ export const useCart = () => {
     addToCart,
     increaseQuantity,
     decreaseQuantity,
+    removeToCart,
     clearCart,
   };
 };

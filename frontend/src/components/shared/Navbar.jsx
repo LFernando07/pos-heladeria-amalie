@@ -1,19 +1,9 @@
-import { useState } from 'react';
-import './Navbar.css';
+import { useCategories } from "../../hooks/useCategories";
+import "./Navbar.css";
 
-export default function Navbar({ onCategoryChange }) {
-  const categorias = [
-    'Todos los productos',
-    'Comida',
-    'Postres',
-    'Botanas',
-    'Soda Italiana',
-    'Frappés',
-    'Malteadas',
-    'Helados',
-  ];
-
-  const [active, setActive] = useState('Todos los productos');
+export const Navbar = ({ onCategoryChange }) => {
+  const { categorias, active, setActive } = useCategories();
+  const all = "Todos los productos";
 
   const handleClick = (cat) => {
     setActive(cat);
@@ -23,17 +13,25 @@ export default function Navbar({ onCategoryChange }) {
   return (
     <nav className="navbar">
       <ul className="navbar-list">
+        <li>
+          <button
+            className={`cat-btn ${active === all ? "active" : ""}`}
+            onClick={() => handleClick(all)}
+          >
+            {all}
+          </button>
+        </li>
         {categorias.map((cat) => (
-          <li key={cat}>
+          <li key={cat.id}>
             <button
-              className={`cat-btn ${active === cat ? 'active' : ''}`}
-              onClick={() => handleClick(cat)}
+              className={`cat-btn ${active === cat.nombre ? "active" : ""}`}
+              onClick={() => handleClick(cat.nombre)}
             >
-              {cat}
+              {cat.nombre}
             </button>
           </li>
         ))}
       </ul>
     </nav>
   );
-}
+};

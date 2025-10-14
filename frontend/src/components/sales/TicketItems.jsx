@@ -1,9 +1,11 @@
-export const TicketItems = ({ items, onIncrement, onDecrement }) => (
+import { FaTrash } from "react-icons/fa";
+export const TicketItems = ({ items, onIncrement, onDecrement, onRemove }) => (
   <div className="items">
     <div className="items-header">
       <span className="product-col">PRODUCTO</span>
       <span className="quantity-col">CANTIDAD</span>
       <span className="subtotal-col">SUBTOTAL</span>
+      <span className="action-col"></span>
     </div>
     {items.length === 0 ? (
       <p className="empty-ticket-message">No hay productos en la orden</p>
@@ -18,6 +20,9 @@ export const TicketItems = ({ items, onIncrement, onDecrement }) => (
           </div>
           <span className="subtotal-col">
             ${(product.precio * product.cantidad).toFixed(2)}
+          </span>
+          <span className="action-col" onClick={() => onRemove(product.id)}>
+            <FaTrash />
           </span>
         </div>
       ))

@@ -1,89 +1,92 @@
-
 .form-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background: linear-gradient(135deg, #fce4ec, #f8bbd0); /* Gradiente de rosa pálido a rosa claro */
-    padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(
+    135deg,
+    #fce4ec,
+    #f8bbd0
+  ); /* Gradiente de rosa pálido a rosa claro */
+  padding: 20px;
 }
 
 .product-form {
-    width: 100%;
-    max-width: 500px;
-    padding: 30px;
-    background-color: #ffffff;
-    border: 2px solid #f089d1;
-    border-radius: 20px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 500px;
+  padding: 30px;
+  background-color: #ffffff;
+  border: 2px solid #f089d1;
+  border-radius: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 .product-form h2 {
-    text-align: center;
-    margin-bottom: 25px;
-    color: #333;
+  text-align: center;
+  margin-bottom: 25px;
+  color: #333;
 }
 
 .form-group {
-    margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 
 .form-group label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: bold;
-    color: #555;
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: #555;
 }
 
 .form-group input {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    font-size: 1em;
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1em;
 }
 
 .form-actions {
-    display: flex;
-    justify-content: space-between;
-    gap: 15px;
-    margin-top: 30px;
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  margin-top: 30px;
 }
 
 .form-actions button {
-    flex: 1;
-    padding: 12px;
-    border: none;
-    border-radius: 8px;
-    font-size: 1em;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+  flex: 1;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1em;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 .btn-submit {
-    background-color: #43a047; /* Verde */
-    color: white;
+  background-color: #43a047; /* Verde */
+  color: white;
 }
 
 .btn-submit:hover {
-    background-color: #2e7d32;
+  background-color: #2e7d32;
 }
 
 .btn-cancel {
-    background-color: #f1f1f1; /* Gris claro */
-    color: #333;
+  background-color: #f1f1f1; /* Gris claro */
+  color: #333;
 }
 
 .btn-cancel:hover {
-    background-color: #ddd;
+  background-color: #ddd;
 }
 
 .error-message {
-    color: #e53935;
-    text-align: center;
-    margin-bottom: 15px;
-    font-weight: bold;
+  color: #e53935;
+  text-align: center;
+  margin-bottom: 15px;
+  font-weight: bold;
 }
 .logoP2 {
   width: 120px;
@@ -92,11 +95,12 @@
   right: 0;
 }
 .form-group input,
-.form-group select { /* 1. Añade 'select' a esta regla */
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    font-size: 1em;
-    background-color: white; /* 2. Asegura un fondo blanco */
+.form-group select {
+  /* 1. Añade 'select' a esta regla */
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1em;
+  background-color: white; /* 2. Asegura un fondo blanco */
 }

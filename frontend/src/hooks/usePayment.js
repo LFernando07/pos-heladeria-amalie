@@ -4,6 +4,10 @@ export const usePayment = (total) => {
   const [montoRecibido, setMontoRecibido] = useState("");
   const [cambio, setCambio] = useState(0);
 
+  // Efecto para:
+  // Calcular dinamicamente el cambio de la paga
+  // El efecto se ejecuta cada que se hace un cambio de recibido o
+  // Si el total de la cuenta cambia
   useEffect(() => {
     const recibido = parseFloat(montoRecibido) || 0;
     setCambio(recibido >= total ? recibido - total : 0);

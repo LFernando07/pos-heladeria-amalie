@@ -2,6 +2,7 @@ import jsPDF from "jspdf";
 import { generateBarCode } from "../utils/barcodeGenerator";
 
 export const generatePdf = ({
+  id,
   folioVenta,
   items,
   total,
@@ -14,7 +15,7 @@ export const generatePdf = ({
   const doc = new jsPDF({
     orientation: "p",
     unit: "mm",
-    format: [80, 297],
+    format: [80, 180],
   });
 
   // Header
@@ -43,7 +44,7 @@ export const generatePdf = ({
 
   // Datos de la venta
   doc.setFontSize(9);
-  doc.text(`Venta: #${folioVenta}`, 5, 30);
+  doc.text(`Venta: ${folioVenta}`, 5, 30);
   doc.text(`Fecha: ${formattedDate} ${formattedTime}`, 5, 35);
   doc.text(`Atendido por: ${nombreEmpleado}`, 5, 40);
   doc.text(
@@ -106,7 +107,7 @@ export const generatePdf = ({
 
   // Código de barras
   doc.setFontSize(11);
-  doc.addImage(generateBarCode(folioVenta), "PNG", 15, y, 50, 20);
+  doc.addImage(generateBarCode(id), "PNG", 15, y, 50, 20);
   y += 25;
 
   // Footer
@@ -118,5 +119,5 @@ export const generatePdf = ({
     align: "center",
   });
 
-  doc.save(`venta-${folioVenta}.pdf`);
+  doc.save(`${folioVenta}.pdf`);
 };

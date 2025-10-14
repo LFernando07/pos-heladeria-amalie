@@ -4,9 +4,8 @@ import "./ProductCard.css";
 export default function ProductCard({ producto, onBuy }) {
   // Usamos una imagen por defecto si el producto no tiene una
   const imagenProducto = producto.imagen || "./images/placeholder.png";
-
   return (
-    <div className="product-card">
+    <div className="product-card" onClick={() => onBuy(producto)}>
       <div className="image-container">
         <img
           src={imagenProducto}
@@ -16,7 +15,7 @@ export default function ProductCard({ producto, onBuy }) {
       </div>
       <h4 className="plan-name">{producto.nombre}</h4>
       {/*  Ahora pasamos el objeto 'producto' entero a la función onBuy */}
-      <button onClick={() => onBuy(producto)}>${producto.precio}</button>
+      <button>${producto.precio}</button>
     </div>
   );
 }
