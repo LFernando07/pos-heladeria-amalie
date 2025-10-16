@@ -19,3 +19,20 @@ export const createProduct = async (productData) => {
     throw new Error("Ocurrió un error al guardar el producto.");
   }
 };
+
+const API_URL = `http://localhost:3001/api/productos`;
+
+/**
+ * Elimina un producto por su ID.
+ * @param {number} id - El ID del producto a eliminar.
+ */
+export const deleteProduct = async (id) => {
+  const response = await fetch(`${API_URL}/${id}`, {
+    method: 'DELETE',
+  });
+  if (!response.ok) {
+    throw new Error('No se pudo eliminar el producto.');
+  }
+  return response.json();
+};
+

@@ -9,7 +9,7 @@ import { Tipos } from "../orders/Tipos";
 import { useCart } from "../../hooks/useCar";
 
 export const WrapperProducts = () => {
-  const { setCategoria, productos } = useProducts();
+  const { setCategoria, products } = useProducts();
   const {
     cart,
     addToCart,
@@ -44,7 +44,7 @@ export const WrapperProducts = () => {
       </div>
 
       <main className="content">
-        <ProductList productos={productos} onAdd={handleCompra} />
+        <ProductList productos={products} onAdd={handleCompra} />
         <Ticket
           items={cart}
           onClear={clearCart}

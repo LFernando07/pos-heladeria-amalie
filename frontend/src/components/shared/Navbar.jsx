@@ -2,7 +2,7 @@ import { useCategories } from "../../hooks/useCategories";
 import "./Navbar.css";
 
 export const Navbar = ({ onCategoryChange }) => {
-  const { categorias, active, setActive } = useCategories();
+  const { categories, active, setActive } = useCategories();
   const all = "Todos los productos";
 
   const handleClick = (cat) => {
@@ -21,7 +21,7 @@ export const Navbar = ({ onCategoryChange }) => {
             {all}
           </button>
         </li>
-        {categorias.map((cat) => (
+        {categories.map((cat) => (
           <li key={cat.id}>
             <button
               className={`cat-btn ${active === cat.nombre ? "active" : ""}`}

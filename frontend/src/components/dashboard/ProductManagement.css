@@ -1,0 +1,88 @@
+/* src/components/products/ProductManagement.css */
+
+.management-container {
+  width: 100%;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.page-header h1 {
+  color: #333;
+}
+
+.btn-add {
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(90deg, #ff7e5f, #feb47b); /* <-- CAMBIO: Gradiente principal */
+  color: white;
+  text-decoration: none;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.btn-add:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.management-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #fff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.management-table th, .management-table td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid #f0e6da; /* Borde sutil */
+}
+
+.management-table th {
+  background-color: #fffaf2; /* Fondo de encabezado muy claro */
+  font-weight: bold;
+}
+
+.product-table-img {
+  width: 75px;
+  height: 75px;
+  object-fit: fill;
+  border-radius: 1px;
+}
+
+.actions-cell button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-right: 0.5rem;
+  font-weight: bold;
+  color: white;
+  transition: background-color 0.2s;
+}
+
+.btn-edit {
+  background-color: #f9a825; /* <-- CAMBIO: Amarillo/Naranja */
+  font-size: 1.3rem;
+}
+.btn-edit:hover {
+    background-color: #f59c00;
+}
+
+.btn-delete {
+  background-color: #e53935; /* <-- CAMBIO: Rojo que combina */
+    font-size: 1.3rem;
+
+}
+.btn-delete:hover {
+    background-color: #c62828;
+}

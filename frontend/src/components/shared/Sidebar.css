@@ -1,0 +1,52 @@
+/* src/components/shared/Sidebar.css */
+
+.sidebar {
+  width: 250px;
+  background-color: #ffffff; /* El sidebar se mantiene blanco para contraste */
+  border-right: 1px solid #f0e6da; /* Borde sutil que combina */
+  display: flex;
+  flex-direction: column;
+
+  position: sticky; /* La clave para que se quede fijo */
+  top: 0;          /* Pégalo en la parte superior de la pantalla */
+  height: 100vh;   /* Asegura que ocupe toda la altura de la pantalla */
+  align-self: flex-start; /* Se alinea correctamente en su contenedor */
+}
+
+.sidebar-header {
+  padding: 1.5rem;
+  text-align: center;
+  border-bottom: 1px solid #f0e6da;
+  color: #ff7e5f; /* <-- CAMBIO: Color principal de la paleta */
+}
+
+.sidebar-header h3 {
+    margin: 0;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem 0;
+}
+
+.sidebar-nav a {
+  padding: 1rem 1.5rem;
+  text-decoration: none;
+  color: #555;
+  transition: all 0.2s ease-in-out;
+  border-left: 4px solid transparent; /* Borde para el estado activo */
+}
+
+.sidebar-nav a:hover {
+  background-color: #fff5e9; /* <-- CAMBIO: Fondo al pasar el mouse */
+  color: #d16a53;
+}
+
+/* El link activo ahora usa el color principal */
+.sidebar-nav a.active {
+  background-color: #fff5e9;
+  font-weight: bold;
+  color: #ff7e5f;
+  border-left: 4px solid #ff7e5f; /* Borde de color que resalta */
+}

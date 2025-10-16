@@ -1,0 +1,66 @@
+
+.report-controls {
+  display: flex;
+  align-items: flex-end;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  margin-bottom: 2rem;
+}
+
+.date-picker {
+  display: flex;
+  flex-direction: column;
+}
+
+.date-picker label {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  color: #555;
+}
+
+.date-picker input {
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+.btn-generate {
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(90deg, #ff7e5f, #feb47b);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.export-buttons {
+  margin-bottom: 2rem;
+  display: flex;
+  gap: 1rem;
+  
+}
+
+.btnpdf {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.3rem;
+  font-weight: bold;
+  cursor: pointer;
+  background: linear-gradient(90deg, #ff3300, #e34949);  color: white;
+}
+.btnexcel {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.3rem;
+  font-weight: bold;
+  cursor: pointer;
+  background: linear-gradient(90deg, #009824, #739a77);  color: white;
+}

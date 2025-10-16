@@ -116,7 +116,7 @@ export const NuevoProducto = () => {
           <button
             type="button"
             className="btn-cancel"
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/dashboard")}
           >
             Cancelar
           </button>

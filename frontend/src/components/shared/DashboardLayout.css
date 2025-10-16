@@ -1,0 +1,38 @@
+.dashboard-layout {
+  display: flex;
+  height: 100vh; /* Ocupa toda la altura de la pantalla */
+  background-color: #fff5e9;
+  overflow: hidden; /* Evita el scroll en el contenedor principal */
+}
+
+/*  Nuevo contenedor para el panel derecho */
+.dashboard-main-panel {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* También previene el scroll aquí */
+}
+
+/* Estilos para el nuevo header */
+.dashboard-header {
+  padding: 1rem 2rem;
+  background: linear-gradient(90deg, #ff7e5f, #feb47b);
+  border-bottom: 1px solid #f0e6da;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  border-radius: 0 0 18px 18px;
+  flex-shrink: 0; /* Evita que el header se encoja */
+}
+
+.dashboard-header h1 {
+  margin: 0;
+  font-size: 1.8rem;
+  color: #ffffff;
+  text-align: center;
+}
+
+/*  Modificación para que SOLO el contenido principal tenga scroll */
+.dashboard-content {
+  flex-grow: 1;
+  padding: 2rem;
+  overflow-y: auto; /* ¡La clave! Permite el scroll vertical solo aquí */
+}
