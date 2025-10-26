@@ -1,66 +1,253 @@
+/* ================================
+   CONTENEDOR PRINCIPAL
+================================== */
+.management-container {
+  padding: 2rem;
+  background: linear-gradient(135deg, #fef9f3 0%, #fff 100%);
+  min-height: 100vh;
+}
 
+/* ================================
+   ENCABEZADO DE LA PÁGINA
+================================== */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 3px solid #f7cac9;
+}
+
+.title-report {
+  font-size: 2rem;
+  color: #dc143c;
+  font-weight: 700;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* ================================
+   CONTROLES DE FILTRO
+================================== */
 .report-controls {
   display: flex;
   align-items: flex-end;
   gap: 1.5rem;
   padding: 1.5rem;
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
   margin-bottom: 2rem;
+  flex-wrap: wrap;
 }
 
 .date-picker {
   display: flex;
   flex-direction: column;
+  flex: 1;
+  min-width: 200px;
 }
 
 .date-picker label {
-  font-weight: bold;
+  font-weight: 600;
   margin-bottom: 0.5rem;
   color: #555;
 }
 
 .date-picker input {
-  padding: 0.75rem;
+  padding: 0.75rem 1rem;
   border: 1px solid #ddd;
-  border-radius: 6px;
+  border-radius: 8px;
   font-size: 1rem;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
+.date-picker input:focus {
+  border-color: #dc143c;
+  box-shadow: 0 0 5px rgba(220, 20, 60, 0.3);
+  outline: none;
+}
+
+/* ================================
+   BOTÓN DE GENERAR REPORTE
+================================== */
 .btn-generate {
-  padding: 0.75rem 1.5rem;
-  background: linear-gradient(90deg, #ff7e5f, #feb47b);
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.875rem 1.5rem;
+  background: linear-gradient(135deg, #dc143c 0%, #f75270 100%);
   color: white;
   border: none;
-  border-radius: 8px;
-  font-weight: bold;
-  font-size: 1.2rem;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 1.1rem;
   cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(220, 20, 60, 0.3);
 }
 
+.btn-generate:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(220, 20, 60, 0.4);
+}
+
+.btn-generate:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* ================================
+   BOTONES DE EXPORTACIÓN
+================================== */
 .export-buttons {
-  margin-bottom: 2rem;
   display: flex;
   gap: 1rem;
-  
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+
+.export-buttons button {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.875rem 1.5rem;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: white;
 }
 
 .btnpdf {
-  padding: 0.75rem 1.5rem;
-  border: none;
-  border-radius: 8px;
-  font-size: 1.3rem;
-  font-weight: bold;
-  cursor: pointer;
-  background: linear-gradient(90deg, #ff3300, #e34949);  color: white;
+  background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+  box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
 }
+
+.btnpdf:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);
+}
+
 .btnexcel {
-  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+  box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3);
+}
+
+.btnexcel:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(46, 204, 113, 0.4);
+}
+
+.btn-email {
+  background: linear-gradient(135deg, #2980b9 0%, #3498db 100%);
+  box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+}
+
+.btn-email:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+}
+
+/* ================================
+   TABLA DE RESULTADOS
+================================== */
+.management-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+}
+
+.management-table thead {
+  background: linear-gradient(135deg, #dc143c 0%, #f75270 100%);
+  color: white;
+}
+
+.management-table thead th {
+  padding: 1.25rem 1rem;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
   border: none;
-  border-radius: 8px;
-  font-size: 1.3rem;
-  font-weight: bold;
-  cursor: pointer;
-  background: linear-gradient(90deg, #009824, #739a77);  color: white;
+}
+
+.management-table tbody tr {
+  border-bottom: 1px solid #f0f0f0;
+  transition: all 0.3s ease;
+}
+
+.management-table tbody tr:hover {
+  background: linear-gradient(90deg, #fdebd0 0%, #f7cac9 20%, transparent 100%);
+  transform: scale(1.005);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.management-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.management-table tbody td {
+  padding: 1rem;
+  color: #333;
+  font-size: 0.95rem;
+  vertical-align: middle;
+}
+
+/* ================================
+   ID con estilo
+================================== */
+.management-table td:first-child {
+  font-weight: 700;
+  color: #dc143c;
+}
+
+/* ================================
+   RESPONSIVE
+================================== */
+@media (max-width: 768px) {
+  .report-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .export-buttons {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .management-table thead {
+    display: none;
+  }
+
+  .management-table tbody tr {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #f0f0f0;
+    border-radius: 12px;
+    margin-bottom: 1rem;
+    padding: 1rem;
+  }
+
+  .management-table tbody td {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem 0;
+  }
+
+  .management-table tbody td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: #dc143c;
+  }
 }

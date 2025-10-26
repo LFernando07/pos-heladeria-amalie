@@ -13,6 +13,7 @@ export default function ProductCard({ producto, onBuy }) {
           className="product-image"
         />
       </div>
+      <p style={{ opacity: 0.6, margin: 0 }}>{producto.categoria}</p>
       <h4 className="plan-name">{producto.nombre}</h4>
       {/*  Ahora pasamos el objeto 'producto' entero a la función onBuy */}
       <button>${producto.precio}</button>

@@ -33,6 +33,6 @@
 /*  Modificación para que SOLO el contenido principal tenga scroll */
 .dashboard-content {
   flex-grow: 1;
-  padding: 2rem;
+  padding: 1.5rem;
   overflow-y: auto; /* ¡La clave! Permite el scroll vertical solo aquí */
 }

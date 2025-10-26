@@ -1,0 +1,342 @@
+/* Contenedor principal de ventas */
+.sales-container {
+  padding: 2rem;
+  background: linear-gradient(135deg, #fef9f3 0%, #fff 100%);
+  min-height: 100vh;
+}
+
+/* Header de ventas */
+.sales-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 3px solid #f7cac9;
+}
+
+.sales-header h1 {
+  font-size: 2rem;
+  color: #dc143c;
+  font-weight: 700;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.sales-header h1::before {
+  content: "💰";
+  font-size: 2.5rem;
+}
+
+/* Estadísticas rápidas */
+.sales-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  border-left: 4px solid #f75270;
+  transition: transform 0.3s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+}
+
+.stat-card h3 {
+  margin: 0 0 0.5rem 0;
+  color: #7f8c8d;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stat-card p {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #dc143c;
+}
+
+/* Tabla de ventas */
+.sales-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+}
+
+.sales-table thead {
+  background: linear-gradient(135deg, #dc143c 0%, #f75270 100%);
+  color: white;
+}
+
+.sales-table thead th {
+  padding: 1.25rem 1rem;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.sales-table thead th:first-child {
+  padding-left: 1.5rem;
+}
+
+/* Filas de la tabla */
+.sales-table tbody tr {
+  border-bottom: 1px solid #f0f0f0;
+  transition: all 0.3s ease;
+}
+
+.sales-table tbody tr:hover {
+  background: linear-gradient(90deg, #fdebd0 0%, #f7cac9 20%, transparent 100%);
+  transform: scale(1.005);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.sales-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.sales-table tbody td {
+  padding: 1.25rem 1rem;
+  color: #333;
+  font-size: 0.95rem;
+  vertical-align: middle;
+}
+
+.sales-table tbody td:first-child {
+  padding-left: 1.5rem;
+}
+
+/* ID de venta con badge */
+.sale-id {
+  display: inline-block;
+  background: linear-gradient(135deg, #f7cac9 0%, #fdebd0 100%);
+  color: #dc143c;
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 0.875rem;
+}
+
+/* Fecha y hora con iconos */
+.sale-date,
+.sale-time {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #555;
+}
+
+.sale-date::before {
+  content: "📅";
+}
+
+.sale-time::before {
+  content: "🕐";
+}
+
+/* Valores monetarios */
+.money-value {
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+
+.money-total {
+  color: #27ae60;
+}
+
+.money-paid {
+  color: #3498db;
+}
+
+.money-change {
+  color: #f39c12;
+}
+
+/* Empleado con badge */
+.employee-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: #ecf0f1;
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  color: #2c3e50;
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.employee-badge::before {
+  content: "👤";
+}
+
+/* Botón de ver detalles */
+.btn-details {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 10px rgba(155, 89, 182, 0.3);
+}
+
+.btn-details:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(155, 89, 182, 0.4);
+}
+
+.btn-details:active {
+  transform: translateY(0);
+}
+
+/* Modal de detalles mejorado */
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 1rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid #f7cac9;
+}
+
+.modal-header h2 {
+  margin: 0;
+  color: #dc143c;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.modal-header h2::before {
+  content: "🧾";
+}
+
+/* Estados de carga */
+.loading-state,
+.error-state {
+  text-align: center;
+  padding: 3rem;
+  font-size: 1.2rem;
+}
+
+.loading-state {
+  color: #7f8c8d;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.loading-state::before {
+  content: "⏳ ";
+  font-size: 2rem;
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.error-state {
+  color: #e74c3c;
+}
+
+.error-state::before {
+  content: "❌ ";
+  font-size: 2rem;
+  display: block;
+  margin-bottom: 1rem;
+}
+
+/* Animación de carga */
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .sales-table {
+    font-size: 0.875rem;
+  }
+
+  .sales-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .sales-container {
+    padding: 1rem;
+  }
+
+  .sales-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .sales-stats {
+    grid-template-columns: 1fr;
+  }
+
+  /* Tabla responsive */
+  .sales-table thead {
+    display: none;
+  }
+
+  .sales-table tbody tr {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+    border: 1px solid #f0f0f0;
+    border-radius: 12px;
+    padding: 1rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  }
+
+  .sales-table tbody td {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  .sales-table tbody td:last-child {
+    border-bottom: none;
+    justify-content: center;
+    margin-top: 0.5rem;
+  }
+
+  .sales-table tbody td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: #dc143c;
+  }
+
+  .btn-details {
+    width: 100%;
+    justify-content: center;
+  }
+}

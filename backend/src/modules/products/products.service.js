@@ -4,6 +4,9 @@ const {
   createProductModel,
   getAllProductsModel,
   updateProductImageModel,
+  getProductByIdModel,
+  updateProductModel,
+  deleteProductModel,
 } = require("./products.model");
 
 const getAllProductsService = (callback) => {
@@ -13,6 +16,14 @@ const getAllProductsService = (callback) => {
     if (!productos.length) return callback(null, []);
 
     callback(null, productos);
+  });
+};
+
+const getProductByIdService = (id, callback) => {
+  getProductByIdModel(id, (err, producto) => {
+    if (err) return callback(err);
+    if (!producto) return callback(new Error("Producto no encontrado"));
+    callback(null, producto);
   });
 };
 
@@ -103,7 +114,26 @@ const createProductService = (data, file, callback) => {
   });
 };
 
+const updateProductService = (id, data, callback) => {
+  updateProductModel(id, data, (err, result) => {
+    if (err) return callback(err);
+    if (!result.updated) return callback(new Error("Producto no encontrado"));
+    callback(null, { success: true });
+  });
+};
+
+const deleteProductService = (id, callback) => {
+  deleteProductModel(id, (err, result) => {
+    if (err) return callback(err);
+    if (!result.deleted) return callback(new Error("Producto no encontrado"));
+    callback(null, { success: true });
+  });
+};
+
 module.exports = {
   getAllProductsService,
+  getProductByIdService,
   createProductService,
+  updateProductService,
+  deleteProductService,
 };

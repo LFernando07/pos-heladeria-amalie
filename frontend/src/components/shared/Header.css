@@ -17,12 +17,17 @@
 
 /* Estilos para el nuevo botón/link */
 .add-product-link {
+  position: absolute;
+  top: 10px;
+  left: 95%;
   display: flex;
-  align-items: flex-start;
-  max-width: 200px;
+  justify-content: center;
+  align-items: center;
+  max-width: 24px;
   gap: 8px;
+  background: #ff7e5f;
   padding: 10px 15px;
-  background-color: #b95fa3; 
+  box-shadow: 0 0 2px 2px white;
   color: white;
   text-decoration: none; /* Quita el subrayado del enlace */
   border-radius: 8px;

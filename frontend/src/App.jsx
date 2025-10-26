@@ -23,8 +23,8 @@ export default function App() {
           <Route path="products" element={<ProductManagement />} />
           <Route path="products/new" element={<NuevoProducto />} />
           <Route path="categories" element={<CategoryManagement />} />
-          <Route path="sales" element={<SalesManagement />} /> 
-          <Route path="reports" element={<ReportsManagement />} /> 
+          <Route path="sales" element={<SalesManagement />} />
+          <Route path="reports" element={<ReportsManagement />} />
         </Route>
       </Routes>
     </BrowserRouter>

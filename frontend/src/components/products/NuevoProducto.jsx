@@ -7,7 +7,7 @@ import { SuccessToast } from "../shared/SuccessToast";
 
 export const NuevoProducto = () => {
   const { newProduct } = useProducts();
-  const { categorias } = useCategories();
+  const { categories } = useCategories();
   const [nombre, setNombre] = useState("");
   const [precio, setPrecio] = useState("");
   const [categoria, setCategoria] = useState(0);
@@ -42,7 +42,7 @@ export const NuevoProducto = () => {
       // alert("¡Producto guardado con éxito!");
       // Esperar a que termine la animación antes de navegar
       setTimeout(() => {
-        navigate("/");
+        navigate("/dashboard/products");
       }, 2000); // Duración de la animación del toast
     } catch (err) {
       setError(err.message);
@@ -52,7 +52,12 @@ export const NuevoProducto = () => {
   return (
     <div className="form-container">
       <form onSubmit={handleSubmit} className="product-form">
-        <img src="./images/logo_amelie.png" className="logoP2" />
+        <img
+          src="/public/logo_amelie.png"
+          className="Logo Amelie"
+          width={96}
+          height={96}
+        />
         <h2>Dar de Alta un Nuevo Producto</h2>
         {error && <p className="error-message">{error}</p>}
 
@@ -87,7 +92,7 @@ export const NuevoProducto = () => {
             <option value="" disabled>
               Selecciona una categoría (!)
             </option>
-            {categorias.map((cat) => {
+            {categories.map((cat) => {
               return (
                 <option key={cat.id} value={cat.id}>
                   {cat.nombre}

@@ -1,74 +1,304 @@
-/* ESTE COMPONENTE ES EL QUE CONTIENE TODA LA GESTIÓN DEL DASHBOARD */
-
-import { Link } from 'react-router-dom';
-import { useProducts } from '../../hooks/useProducts';
-import { deleteProduct } from '../../services/products.service';
-import { FaTrashAlt, FaEdit} from 'react-icons/fa';
-import { MdOutlineCreate } from 'react-icons/md';
-import './ProductManagement.css'; 
+import { Link } from "react-router-dom";
+import { useState } from "react";
+import { useProducts } from "../../hooks/useProducts";
+import { useCategories } from "../../hooks/useCategories";
+import { FaTrashAlt, FaEdit } from "react-icons/fa";
+import { MdOutlineCreate } from "react-icons/md";
+import Modal from "../shared/Modal";
+import "./ProductManagement.css";
 
 const ProductManagement = () => {
-  const { products, loading, error, refreshProducts } = useProducts();
+  const {
+    products,
+    loading,
+    error,
+    refreshProducts,
+    editProduct,
+    removeProduct,
+  } = useProducts();
 
-  const handleDelete = async (id) => {
-    if (window.confirm("¿Estás seguro de que quieres eliminar este producto?")) {
-      try {
-        await deleteProduct(id);
-        alert('Producto eliminado con éxito');
-        refreshProducts(); // se refresca la lista de productos
-      } catch (err) {
-        alert(err.message);
-      }
+  const { categories } = useCategories();
+
+  // Estados para el modal de edición
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editingProduct, setEditingProduct] = useState(null);
+  const [editProductName, setEditProductName] = useState("");
+  const [editProductPrice, setEditProductPrice] = useState(0);
+  const [editProductCategory, setEditProductCategory] = useState("");
+
+  // Estados para el modal de eliminacion
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [productToDelete, setProductToDelete] = useState(null);
+
+  // Abrir modal de edición
+  const openEditModal = (product) => {
+    setEditingProduct(product);
+    setEditProductName(product.nombre);
+    setEditProductPrice(product.precio);
+    setEditProductCategory(product.categoria_id);
+    setIsEditModalOpen(true);
+  };
+
+  // Cerrar modal de edición
+  const closeEditModal = () => {
+    setIsEditModalOpen(false);
+    setEditingProduct(null);
+    setEditProductName("");
+    setEditProductPrice(0);
+  };
+
+  // Confirmar edición
+  const confirmEdit = async () => {
+    if (!editProductName.trim()) {
+      alert("El nombre del producto no puede estar vacío.");
+      return;
+    }
+    if (editProductPrice <= 0) {
+      alert("El precio del producto no puede ser igual o menor a cero.");
+      return;
+    }
+
+    // Comprobar si realmente hubo algún cambio
+    const noChanges =
+      editProductName === editingProduct.nombre &&
+      parseFloat(editProductPrice) === parseFloat(editingProduct.precio) &&
+      parseInt(editProductCategory) === editingProduct.categoria_id;
+
+    if (noChanges) {
+      return;
+    }
+
+    const data = {
+      nombre: editProductName,
+      precio: editProductPrice,
+      categoria_id: parseInt(editProductCategory),
+      requiere_sabor: editingProduct.requiere_sabor,
+      disponible: editingProduct.disponible,
+    };
+
+    try {
+      await editProduct(editingProduct.id, data);
+      refreshProducts();
+      closeEditModal();
+    } catch (err) {
+      alert(err.message);
     }
   };
 
-  if (loading) return <p>Cargando productos...</p>;
-  if (error) return <p>Error al cargar los productos: {error}</p>;
+  // Abrir modal de eliminación
+  const handleDeleteClick = (product) => {
+    setProductToDelete(product);
+    setIsDeleteModalOpen(true);
+  };
+
+  // Cerrar modal de eliminación
+  const cancelDelete = () => {
+    setIsDeleteModalOpen(false);
+    setProductToDelete(null);
+  };
+
+  // Confirmar eliminación
+  const confirmDelete = async () => {
+    console.log(productToDelete);
+    try {
+      await removeProduct(productToDelete.id);
+      setIsDeleteModalOpen(false);
+      setProductToDelete(null);
+      refreshProducts();
+    } catch (err) {
+      alert(err.message);
+    }
+  };
+
+  // Estados de carga y error
+  if (loading) {
+    return (
+      <div className="product-management-container">
+        <div className="product-loading">Cargando catalogo productos...</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="product-management-container">
+        <div className="product-error">
+          Error al cargar los productos: {error}
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="management-container">
-      <div className="page-header">
+    <div className="product-management-container">
+      <div className="product-page-header">
         <h1>Catálogo de Productos</h1>
-        {/* Este Link debe coincidir con la ruta definida en App.jsx */}
-        <Link to="/dashboard/products/new" className="btn-add">
-          <MdOutlineCreate size={25} /> Agregar Producto
+        <Link to="/dashboard/products/new" className="btn-add-product">
+          <MdOutlineCreate size={20} /> Agregar Producto
         </Link>
       </div>
-      
 
-      <table className="management-table">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Imagen</th>
-            <th>Nombre</th>
-            <th>Precio</th>
-            <th>Categoría</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          {products.map(product => (
-            <tr key={product.id}>
-              <td>{product.id}</td>
-              <td>
-                <img 
-                  src={product.imagen ? product.imagen : '/images/placeholder.png'} 
-                  alt={product.nombre} 
-                  className="product-table-img"
-                />
-              </td>
-              <td>{product.nombre}</td>
-              <td>${product.precio.toFixed(2)}</td>
-              <td>{product.categoria}</td>
-              <td className="actions-cell">
-                <button className="btn-edit"><FaEdit />Editar</button>
-                <button className="btn-delete" onClick={() => handleDelete(product.id)}><FaTrashAlt />Eliminar</button>
-              </td>
+      {products.length === 0 ? (
+        <div className="empty-products">
+          <p>No hay productos registrados.</p>
+          <Link to="/dashboard/products/new" className="btn-add-product">
+            <MdOutlineCreate size={20} /> Crear primer producto
+          </Link>
+        </div>
+      ) : (
+        <table className="product-management-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Imagen</th>
+              <th>Nombre</th>
+              <th>Precio</th>
+              <th>Categoría</th>
+              <th>Acciones</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {products.map((product) => (
+              <tr key={product.id}>
+                <td data-label="ID">
+                  <span className="product-id">#{product.id}</span>
+                </td>
+                <td data-label="Imagen">
+                  <img
+                    src={
+                      product.imagen
+                        ? product.imagen[0] === "."
+                          ? product.imagen.slice(1)
+                          : product.imagen
+                        : "/images/placeholder.png"
+                    }
+                    alt={product.nombre}
+                    className="product-table-img"
+                  />
+                </td>
+                <td data-label="Nombre">
+                  <span>{product.nombre}</span>
+                </td>
+                <td data-label="Precio">
+                  <span className="product-price">
+                    ${product.precio.toFixed(2)}
+                  </span>
+                </td>
+                <td data-label="Categoría">
+                  <span className="product-category">{product.categoria}</span>
+                </td>
+                <td data-label="Acciones" className="product-actions-cell">
+                  <button
+                    className="btn-edit-product"
+                    onClick={() => openEditModal(product)}
+                  >
+                    <FaEdit />
+                    Editar
+                  </button>
+                  <button
+                    className="btn-delete-product"
+                    onClick={() => handleDeleteClick(product)}
+                  >
+                    <FaTrashAlt />
+                    Eliminar
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+
+      {/* Modal de Edición */}
+      {isEditModalOpen && (
+        <Modal onClose={closeEditModal}>
+          <div className="product-modal-content">
+            <h2>✏️ Editar Producto</h2>
+            <input
+              type="text"
+              value={editProductName}
+              onChange={(e) => setEditProductName(e.target.value)}
+              className="product-modal-input"
+              placeholder="Nombre del producto"
+              autoFocus
+            />
+            <input
+              type="number"
+              value={editProductPrice}
+              onChange={(e) => setEditProductPrice(e.target.value)}
+              className="product-modal-input"
+              placeholder="Precio del producto"
+              autoFocus
+              onKeyDown={(e) => e.key === "Enter" && confirmEdit()}
+            />
+            <select
+              value={editProductCategory}
+              onChange={(e) => setEditProductCategory(e.target.value)}
+              className="product-modal-input"
+            >
+              <option value="">Selecciona una categoría</option>
+              {categories.map((cat) => (
+                <option key={cat.id} value={cat.id}>
+                  {cat.nombre}
+                </option>
+              ))}
+            </select>
+            <div className="product-modal-buttons">
+              <button onClick={closeEditModal} className="btn-cancel">
+                Cancelar
+              </button>
+              <button onClick={confirmEdit} className="btn-confirm">
+                Guardar Cambios
+              </button>
+            </div>
+          </div>
+        </Modal>
+      )}
+
+      {/* Modal de confirmación de eliminación */}
+      {isDeleteModalOpen && (
+        <Modal onClose={cancelDelete}>
+          <div className="product-modal-content">
+            <div style={{ fontSize: "3rem", marginBottom: "1rem" }}>⚠️</div>
+            <h2>¿Eliminar producto?</h2>
+
+            <div className="product-delete-info">
+              <p>
+                <strong>Producto:</strong> {productToDelete?.nombre}
+              </p>
+              <p>
+                <strong>Precio:</strong> ${productToDelete?.precio.toFixed(2)}
+              </p>
+              <p>
+                <strong>Categoría:</strong> {productToDelete?.categoria}
+              </p>
+            </div>
+
+            <p
+              style={{
+                color: "#666",
+                fontSize: "1rem",
+                marginBottom: "1rem",
+              }}
+            >
+              ¿Estás seguro de que quieres eliminar este producto?
+              <br />
+              <span style={{ fontSize: "0.9rem", color: "#999" }}>
+                Esta acción no se puede deshacer.
+              </span>
+            </p>
+
+            <div className="product-modal-buttons">
+              <button onClick={cancelDelete} className="btn-cancel-product">
+                Cancelar
+              </button>
+              <button onClick={confirmDelete} className="btn-confirm-delete">
+                Sí, eliminar
+              </button>
+            </div>
+          </div>
+        </Modal>
+      )}
     </div>
   );
 };
