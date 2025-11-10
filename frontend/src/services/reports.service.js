@@ -1,6 +1,4 @@
-
-const API_URL = `http://localhost:3001/api/reports`;
-
+import api, { API_URL } from "../config/api";
 /**
  * Obtiene el reporte de ventas para un rango de fechas.
  * @param {string} startDate - Fecha de inicio en formato YYYY-MM-DD.
@@ -8,14 +6,11 @@ const API_URL = `http://localhost:3001/api/reports`;
  */
 export const getSalesReport = async (startDate, endDate) => {
   // Las fechas se pasan como "query parameters" en la URL
-  const response = await fetch(`${API_URL}/sales?startDate=${startDate}&endDate=${endDate}`);
-  
-  if (!response.ok) {
-    throw new Error('No se pudo generar el reporte.');
-  }
-  
-  const data = await response.json();
-  return data.data; // Devolvemos el array de ventas filtradas
+  const response = await api.get(
+    `/reports/sales?startDate=${startDate}&endDate=${endDate}`
+  );
+
+  return response.data; // Devolvemos el array de ventas filtradas
 };
 
 /**
@@ -23,15 +18,16 @@ export const getSalesReport = async (startDate, endDate) => {
  * @param {FormData} formData - El objeto FormData que contiene el correo, asunto, cuerpo y el archivo PDF.
  */
 export const sendReportByEmail = async (formData) => {
-  // Nota: La URL completa es /api/reports/email
-  const response = await fetch(`http://localhost:3001/api/reports/email`, {
-    method: 'POST',
-    body: formData, // No se necesita 'Content-Type' header con FormData
+  const response = await fetch(`${API_URL}/api/reports/email`, {
+    method: "POST",
+    body: formData, // No se necesita Content-Type con FormData
   });
 
   if (!response.ok) {
-    throw new Error('El servidor no pudo enviar el correo.');
+    const err = await response.json().catch(() => ({}));
+    throw new Error(err.error || "El servidor no pudo enviar el correo.");
   }
 
-  return response.text(); // Devuelve el mensaje de éxito del servidor
+  const data = await response.json();
+  return data; // { message: "Correo enviado exitosamente" }
 };

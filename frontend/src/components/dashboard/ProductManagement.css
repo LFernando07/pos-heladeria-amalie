@@ -306,6 +306,8 @@
 }
 
 .btn-cancel-product,
+.btn-cancel-edit-product,
+.btn-confirm-edit-product,
 .btn-confirm-delete {
   padding: 0.75rem 1.5rem;
   border: none;
@@ -316,23 +318,27 @@
   font-size: 0.95rem;
 }
 
-.btn-cancel-product {
+.btn-cancel-product,
+.btn-cancel-edit-product {
   background: white;
   color: #666;
   border: 2px solid #ddd;
 }
 
-.btn-cancel-product:hover {
+.btn-cancel-product:hover,
+.btn-cancel-edit-product:hover {
   background: #f5f5f5;
   border-color: #bbb;
 }
 
+.btn-confirm-edit-product,
 .btn-confirm-delete {
   background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
   color: white;
   box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
 }
 
+.btn-confirm-edit-product:hover,
 .btn-confirm-delete:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 16px rgba(231, 76, 60, 0.4);

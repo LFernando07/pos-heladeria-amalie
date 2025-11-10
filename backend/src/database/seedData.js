@@ -34,12 +34,13 @@ const seedData = () => {
     ('Choco Menta','./images/sabores/choco_menta.png'),
     ('Yogurt Griego','./images/sabores/yogurt.png'),
     ('Chocolate Oscuro','./images/sabores/chocolate_oscuro.png'),
-    ('Carbon Activado','./images/sabores/carbon_activado.png')
+    ('Carbon Activado','./images/sabores/carbon_activado.png'),
+    ('Kiwi','./images/sabores/kiwi.png')
     `);
 
     // Helados → todos los sabores excepto Kiwi
     db.run(`INSERT OR IGNORE INTO categorias_sabores (categoria_id, sabor_id)
-    SELECT 4, id FROM sabores
+    SELECT 4, id FROM sabores where nombre IN ('Fresa', 'Chocolate', 'Vainilla', 'Frambuesa', 'Blueberrys', 'Grosella', 'Fruta de Dragón', 'Manzana Verde', 'Chicle', 'Café', 'Taro', 'Moka Blanco', 'Choco Menta', 'Yogurt Griego', 'Chocolate Oscuro', 'Carbon Activado')
     `);
 
     // Sodas → Sabores de las sodas italianas
@@ -106,6 +107,12 @@ const seedData = () => {
     db.run(`INSERT OR IGNORE INTO productos (nombre, precio, categoria_id, imagen, requiere_sabor) VALUES
     ('Malteada', 45.00, 7, './images/20_malteada.png', 1)
   `);
+  });
+
+  // ✅ Cierra la base de datos después de terminar
+  db.close((err) => {
+    if (err) console.error("❌ Error cerrando DB:", err.message);
+    else console.log("✅ Base de datos cerrada después de sembrar datos.");
   });
 };
 

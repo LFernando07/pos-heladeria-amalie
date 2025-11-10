@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { useDateTime } from "./useDateTime";
 import { usePayment } from "./usePayment";
 import { createSale } from "../services/sales.service";
 import { generatePdf } from "../services/pdf.service";
+import { useAuth } from "../context/AuthContext";
 
 export const useTicket = (items, onClear) => {
   const [total, setTotal] = useState(0);
@@ -13,26 +14,35 @@ export const useTicket = (items, onClear) => {
   const { formattedDate, formattedTime } = useDateTime();
   const { montoRecibido, cambio, handleKeyPress, resetPayment } =
     usePayment(total);
+  const { user } = useAuth();
 
-  // Calcular total a pagar cuando cambian los "n" items
+  // ✅ Calcular el total solo cuando cambian los items
   useEffect(() => {
-    const newTotal = items.reduce(
-      (acc, product) => acc + product.precio * product.cantidad,
-      0
+    setTotal(
+      items.reduce((acc, product) => acc + product.precio * product.cantidad, 0)
     );
-    setTotal(newTotal);
   }, [items]);
 
-  const handleProcessPayment = async () => {
-    const recibido = parseFloat(montoRecibido) || 0;
+  // ✅ Limpiar pago si el carrito se vacía
+  useEffect(() => {
+    if (items.length === 0) resetPayment();
+  }, [items, resetPayment]);
 
-    // Validaciones si la orden esta vacia
-    if (items.length === 0) {
+  // ✅ Memoizamos validaciones para evitar recreaciones
+  const isCartEmpty = useMemo(() => items.length === 0, [items]);
+  const isPaymentValid = useMemo(
+    () => parseFloat(montoRecibido) >= total,
+    [montoRecibido, total]
+  );
+
+  // ✅ Procesar el pago con callback optimizado
+  const handleProcessPayment = useCallback(async () => {
+    if (isCartEmpty) {
       alert("No hay productos en la orden.");
       return;
     }
-    // Validacion si el dinero dado "escrito" es menor al pagar
-    if (recibido < total) {
+
+    if (!isPaymentValid) {
       alert("El monto recibido es insuficiente.");
       return;
     }
@@ -40,12 +50,14 @@ export const useTicket = (items, onClear) => {
     setLoading(true);
 
     try {
+      const recibido = parseFloat(montoRecibido) || 0;
+
       // Guardar venta en el servidor
       const result = await createSale({
         total,
         fecha: formattedDate,
         hora: formattedTime,
-        empleado_id: 2 /*"Jake Ponciano"*/, // TODO: Obtener del contexto de usuario
+        empleado_id: parseInt(user.id),
         pagado: recibido,
         cambio,
         productos: items,
@@ -54,7 +66,7 @@ export const useTicket = (items, onClear) => {
       const digitsDate = formattedDate.replace(/\//g, "");
 
       // Generar PDF con el folio real
-      generatePdf({
+      await generatePdf({
         id: digitsDate + result.ventaId,
         folioVenta: result.folio,
         items,
@@ -63,13 +75,13 @@ export const useTicket = (items, onClear) => {
         formattedTime,
         montoRecibido: recibido,
         cambio,
-        nombreEmpleado: "Jake Ponciano", // TODO: Cambiar por el nombre del contexto
+        nombreEmpleado: user.nombre,
       });
 
       // Mostrar toast de éxito
       setShowSuccessToast(true);
 
-      // Limpiar después de 2 segundos
+      // 🔄 Limpiar y reiniciar después de 2 segundos
       setTimeout(() => {
         setShowSuccessToast(false);
         onClear();
@@ -77,16 +89,29 @@ export const useTicket = (items, onClear) => {
       }, 2000);
     } catch (error) {
       console.error("Error al procesar venta:", error);
-      alert(error.message);
+      alert(error.message || "Error al procesar la venta.");
     } finally {
       setLoading(false);
     }
-  };
+  }, [
+    isCartEmpty,
+    isPaymentValid,
+    montoRecibido,
+    total,
+    formattedDate,
+    formattedTime,
+    user,
+    cambio,
+    items,
+    onClear,
+    resetPayment,
+  ]);
 
-  const handleCancel = () => {
+  // ✅ Cancelar transacción de forma limpia
+  const handleCancel = useCallback(() => {
     onClear();
     resetPayment();
-  };
+  }, [onClear, resetPayment]);
 
   return {
     total,

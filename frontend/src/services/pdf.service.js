@@ -115,7 +115,7 @@ export const generatePdf = ({
     align: "center",
   });
   y += 5;
-  doc.text("Vuelva pronto :D", doc.internal.pageSize.getWidth() / 2, y, {
+  doc.text("¡Vuelva pronto!", doc.internal.pageSize.getWidth() / 2, y, {
     align: "center",
   });
 

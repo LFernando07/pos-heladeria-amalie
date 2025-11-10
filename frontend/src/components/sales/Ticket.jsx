@@ -1,26 +1,17 @@
+import { useMemo, useCallback } from "react";
+import { useCartContext } from "../../context/CartContext";
 import { NumericKeypad } from "./NumericKeypad";
 import { SuccessToast } from "../shared/SuccessToast";
-
-import { useTicket } from "../../hooks/useTicket";
-import { TicketActions } from "./TicketActions";
 import { TicketHeader } from "./TicketHeader";
 import { TicketItems } from "./TicketItems";
 import { TicketPaymentDetails } from "./TicketPaymentDetails";
+import { TicketActions } from "./TicketActions";
 import "./Ticket.css";
+import { useAuth } from "../../context/AuthContext";
 
-export const Ticket = ({
-  items,
-  onClear,
-  onIncrement,
-  onDecrement,
-  onRemove,
-}) => {
+export const Ticket = () => {
+  const { ticket } = useCartContext();
   const {
-    total,
-    montoRecibido,
-    cambio,
-    formattedDate,
-    formattedTime,
     showKeypad,
     setShowKeypad,
     showSuccessToast,
@@ -28,9 +19,27 @@ export const Ticket = ({
     handleKeyPress,
     handleProcessPayment,
     handleCancel,
-  } = useTicket(items, onClear);
+    total,
+    montoRecibido,
+    cambio,
+    formattedDate,
+    formattedTime,
+  } = ticket;
 
-  const nombreEmpleado = "Jake Ponciano"; // TODO: Obtener del contexto de usuario
+  const { user } = useAuth();
+
+  // ✅ Memoriza el nombre del empleado para que no se recalcule cada render
+  const nombreEmpleado = useMemo(() => user?.nombre || "Desconocido", [user]);
+
+  // ✅ Memoriza handlers para evitar nuevas referencias en cada render
+  const handleOpenKeypad = useCallback(
+    () => setShowKeypad(true),
+    [setShowKeypad]
+  );
+  const handleCloseKeypad = useCallback(
+    () => setShowKeypad(false),
+    [setShowKeypad]
+  );
 
   return (
     <>
@@ -42,18 +51,13 @@ export const Ticket = ({
             formattedTime={formattedTime}
           />
 
-          <TicketItems
-            items={items}
-            onIncrement={onIncrement}
-            onDecrement={onDecrement}
-            onRemove={onRemove}
-          />
+          <TicketItems />
 
           <TicketPaymentDetails
             total={total}
             montoRecibido={montoRecibido}
             cambio={cambio}
-            onInputClick={() => setShowKeypad(true)}
+            onInputClick={handleOpenKeypad}
           />
 
           <TicketActions
@@ -67,11 +71,11 @@ export const Ticket = ({
       {showKeypad && (
         <NumericKeypad
           onKeyPress={handleKeyPress}
-          onClose={() => setShowKeypad(false)}
+          onClose={handleCloseKeypad}
         />
       )}
 
-      {showSuccessToast && <SuccessToast mensaje={"Venta registrada"} />}
+      {showSuccessToast && <SuccessToast mensaje="Venta registrada" />}
     </>
   );
 };

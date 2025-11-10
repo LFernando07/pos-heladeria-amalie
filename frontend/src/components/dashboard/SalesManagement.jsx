@@ -1,10 +1,6 @@
-/*ESTE COMPONENTE SE ENCARGA DE MOSTRAR LA TABLA DE VENTAS Y 
-ABRIR EL MODAL PARA VER DETALLES DENTRO DE LA SECCIÓN 'ventas'
-EN EL DASHBOARD */
-
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useCallback } from "react";
 import { useSales } from "../../hooks/useSales";
-import Modal from "../shared/Modal";
+import { Modal } from "../shared/Modal";
 import SaleDetails from "./saleDetails";
 import { BiDetail } from "react-icons/bi";
 import "./SalesManagement.css";
@@ -40,15 +36,79 @@ const SalesManagement = () => {
     };
   }, [sales]);
 
-  const handleViewDetails = (sale) => {
+  const handleViewDetails = useCallback((sale) => {
     setSelectedSale(sale);
     setIsModalOpen(true);
-  };
+  }, []);
 
-  const closeModal = () => {
+  const closeModal = useCallback(() => {
     setIsModalOpen(false);
     setSelectedSale(null);
-  };
+  }, []);
+
+  const renderSalesTable = useMemo(() => {
+    if (sales.length === 0) {
+      return <p>No hay ventas registradas, realice una venta primero!</p>;
+    }
+
+    return (
+      <table className="sales-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Fecha</th>
+            <th>Hora</th>
+            <th>Total</th>
+            <th>Pagado</th>
+            <th>Cambio</th>
+            <th>Empleado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {sales.map((sale) => (
+            <tr key={sale.id}>
+              <td data-label="ID">
+                <span className="sale-id">#{sale.id}</span>
+              </td>
+              <td data-label="Fecha">
+                <span className="sale-date">{sale.fecha}</span>
+              </td>
+              <td data-label="Hora">
+                <span className="sale-time">{sale.hora}</span>
+              </td>
+              <td data-label="Total">
+                <span className="money-value money-total">
+                  ${(sale.total || 0).toFixed(2)}
+                </span>
+              </td>
+              <td data-label="Pagado">
+                <span className="money-value money-paid">
+                  ${(sale.pagado || 0).toFixed(2)}
+                </span>
+              </td>
+              <td data-label="Cambio">
+                <span className="money-value money-change">
+                  ${(sale.cambio || 0).toFixed(2)}
+                </span>
+              </td>
+              <td data-label="Empleado">
+                <span className="employee-badge">{sale.empleado_nombre}</span>
+              </td>
+              <td data-label="Acciones" className="actions-cell">
+                <button
+                  className="btn-details"
+                  onClick={() => handleViewDetails(sale)}
+                >
+                  <BiDetail size={18} /> Ver Detalles
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    );
+  }, [sales, handleViewDetails]);
 
   // Estado de carga mejorado
   if (loading) {
@@ -95,62 +155,8 @@ const SalesManagement = () => {
         </div>
       </div>
 
-      {/* Tabla de ventas mejorada */}
-      <table className="sales-table">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Fecha</th>
-            <th>Hora</th>
-            <th>Total</th>
-            <th>Pagado</th>
-            <th>Cambio</th>
-            <th>Empleado</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          {sales.map((sale) => (
-            <tr key={sale.id}>
-              <td data-label="ID">
-                <span className="sale-id">#{sale.id}</span>
-              </td>
-              <td data-label="Fecha">
-                <span className="sale-date">{sale.fecha}</span>
-              </td>
-              <td data-label="Hora">
-                <span className="sale-time">{sale.hora}</span>
-              </td>
-              <td data-label="Total">
-                <span className="money-value money-total">
-                  ${(sale.total || 0).toFixed(2)}
-                </span>
-              </td>
-              <td data-label="Pagado">
-                <span className="money-value money-paid">
-                  ${(sale.pagado || 0).toFixed(2)}
-                </span>
-              </td>
-              <td data-label="Cambio">
-                <span className="money-value money-change">
-                  ${(sale.cambio || 0).toFixed(2)}
-                </span>
-              </td>
-              <td data-label="Empleado">
-                <span className="employee-badge">Jake Ponciano</span>
-              </td>
-              <td data-label="Acciones" className="actions-cell">
-                <button
-                  className="btn-details"
-                  onClick={() => handleViewDetails(sale)}
-                >
-                  <BiDetail size={18} /> Ver Detalles
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      {/* render de tabla de ventas */}
+      {renderSalesTable}
 
       {/* Modal de detalles */}
       {isModalOpen && (
@@ -165,4 +171,4 @@ const SalesManagement = () => {
   );
 };
 
-export default SalesManagement;
+export default React.memo(SalesManagement);

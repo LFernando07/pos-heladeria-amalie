@@ -56,8 +56,47 @@ function createSaleProductsModel(ventaId, productos, callback) {
   });
 }
 
+// Obtener historial de ventas
+function getAllSalesModel(callback) {
+  const sql = `
+    SELECT 
+      v.id,
+      v.folio,
+      v.total,
+      v.fecha,
+      v.hora,
+      v.pagado,
+      v.cambio,
+      v.empleado_id,
+      (e.nombre || ' ' || e.apellido) AS empleado_nombre
+    FROM ventas v
+    LEFT JOIN empleados e ON v.empleado_id = e.id
+    ORDER BY v.id DESC
+  `;
+  db.all(sql, [], (err, rows) => {
+    if (err) return callback(err);
+    callback(null, rows);
+  });
+}
+
+// Obtener detalles de una venta específica
+function getSaleDetailsModel(ventaId, callback) {
+  const sql = `
+    SELECT pv.nombre_producto, pv.cantidad, pv.subtotal
+    FROM productos_venta pv
+    WHERE pv.venta_id = ?
+  `;
+
+  db.all(sql, [ventaId], (err, rows) => {
+    if (err) return callback(err);
+    callback(null, rows);
+  });
+}
+
 module.exports = {
   getCountSalesModel,
   createSaleModel,
   createSaleProductsModel,
+  getAllSalesModel,
+  getSaleDetailsModel,
 };

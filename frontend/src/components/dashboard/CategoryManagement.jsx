@@ -1,128 +1,172 @@
-import React, { useState } from "react";
-import { useCategories } from "../../hooks/useCategories";
-import {
-  createCategory,
-  updateCategory,
-  deleteCategory,
-} from "../../services/category.service";
+import React, { useState, useCallback, useMemo } from "react";
+import { useCategories } from "../../context/CategoryContext";
+import { Modal } from "../shared/Modal";
+import { SuccessToast } from "../shared/SuccessToast";
 import { AiOutlineFolderAdd } from "react-icons/ai";
 import { FaEdit, FaTrashAlt } from "react-icons/fa";
-import Modal from "../shared/Modal";
 import "./CategoryManagement.css";
 
 const CategoryManagement = () => {
-  const { categories, loading, error, refreshCategories } = useCategories();
-  const [newCategoryName, setNewCategoryName] = useState("");
+  const {
+    categories,
+    loading,
+    error,
+    refreshCategories,
+    addNewCategory,
+    modifiedCategory,
+    removeCategory,
+  } = useCategories();
 
-  // Estados para el modal de edición
+  const [newCategoryName, setNewCategoryName] = useState("");
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editingCategory, setEditingCategory] = useState(null);
   const [editCategoryName, setEditCategoryName] = useState("");
-
-  // Estados para el modal de eliminación
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [deletingCategory, setDeletingCategory] = useState(null);
+  const [showSuccessToast, setShowSuccessToast] = useState(false);
 
-  // Agregar nueva categoría
-  const handleAddCategory = async (e) => {
-    e.preventDefault();
-    if (!newCategoryName.trim()) {
-      alert("El nombre de la categoría no puede estar vacío.");
-      return;
-    }
-    try {
-      await createCategory(newCategoryName);
-      setNewCategoryName("");
-      refreshCategories();
-    } catch (err) {
-      alert(err.message);
-    }
-  };
+  // 🔹 Agregar categoría (memorizado)
+  const handleAddCategory = useCallback(
+    async (e) => {
+      e.preventDefault();
+      if (!newCategoryName.trim()) {
+        alert("El nombre de la categoría no puede estar vacío.");
+        return;
+      }
+      try {
+        await addNewCategory(newCategoryName);
+        setShowSuccessToast(true);
+        setNewCategoryName("");
+        setTimeout(refreshCategories, 2000);
+      } catch (err) {
+        alert(err.message);
+      }
+    },
+    [newCategoryName, addNewCategory, refreshCategories]
+  );
 
-  // Abrir modal de edición
-  const openEditModal = (category) => {
+  // 🔹 Modales de edición
+  const openEditModal = useCallback((category) => {
     setEditingCategory(category);
     setEditCategoryName(category.nombre);
     setIsEditModalOpen(true);
-  };
+  }, []);
 
-  // Cerrar modal de edición
-  const closeEditModal = () => {
+  const closeEditModal = useCallback(() => {
     setIsEditModalOpen(false);
     setEditingCategory(null);
     setEditCategoryName("");
-  };
+  }, []);
 
-  // Confirmar edición
-  const confirmEdit = async () => {
+  const confirmEdit = useCallback(async () => {
     if (!editCategoryName.trim()) {
       alert("El nombre de la categoría no puede estar vacío.");
       return;
     }
-    if (editCategoryName === editingCategory.nombre) {
+    if (editCategoryName === editingCategory?.nombre) {
       closeEditModal();
       return;
     }
     try {
-      await updateCategory(editingCategory.id, editCategoryName);
+      await modifiedCategory(editingCategory.id, editCategoryName);
       refreshCategories();
       closeEditModal();
     } catch (err) {
       alert(err.message);
     }
-  };
+  }, [
+    editCategoryName,
+    editingCategory,
+    modifiedCategory,
+    refreshCategories,
+    closeEditModal,
+  ]);
 
-  // Abrir modal de eliminación
-  const openDeleteModal = (category) => {
+  // 🔹 Modales de eliminación
+  const openDeleteModal = useCallback((category) => {
     setDeletingCategory(category);
     setIsDeleteModalOpen(true);
-  };
+  }, []);
 
-  // Cerrar modal de eliminación
-  const closeDeleteModal = () => {
+  const closeDeleteModal = useCallback(() => {
     setIsDeleteModalOpen(false);
     setDeletingCategory(null);
-  };
+  }, []);
 
-  // Confirmar eliminación
-  const confirmDelete = async () => {
+  const confirmDelete = useCallback(async () => {
     try {
-      await deleteCategory(deletingCategory.id);
+      await removeCategory(deletingCategory.id);
       refreshCategories();
       closeDeleteModal();
     } catch (err) {
       alert(err.message);
       closeDeleteModal();
     }
-  };
+  }, [deletingCategory, removeCategory, refreshCategories, closeDeleteModal]);
 
-  // Estados de carga y error
-  if (loading) {
-    return (
-      <div className="category-container">
-        <div className="category-loading">Cargando categorías...</div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="category-container">
-        <div className="category-error">
-          Error al cargar las categorías: {error}
+  // 🔹 Render tabla memorizada -> Componente central de CategoryManagement
+  const renderedTable = useMemo(() => {
+    if (categories.length === 0) {
+      return (
+        <div className="empty-categories">
+          <p>No hay categorías registradas. ¡Crea la primera!</p>
         </div>
+      );
+    }
+
+    return (
+      <table className="category-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {categories.map((category) => (
+            <tr key={category.id}>
+              <td data-label="ID">
+                <span className="category-id">#{category.id}</span>
+              </td>
+              <td data-label="Nombre">
+                <span className="category-name">{category.nombre}</span>
+              </td>
+              <td data-label="Acciones" className="category-actions">
+                <button
+                  className="btn-edit-cat"
+                  onClick={() => openEditModal(category)}
+                >
+                  <FaEdit /> Editar
+                </button>
+                <button
+                  className="btn-delete-cat"
+                  onClick={() => openDeleteModal(category)}
+                >
+                  <FaTrashAlt /> Eliminar
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    );
+  }, [categories, openEditModal, openDeleteModal]);
+
+  if (loading)
+    return <div className="category-loading">Cargando categorías...</div>;
+  if (error)
+    return (
+      <div className="category-error">
+        Error al cargar las categorías: {error}
       </div>
     );
-  }
 
   return (
     <div className="category-container">
-      {/* Header */}
       <div className="category-header">
         <h1>Gestión de Categorías</h1>
       </div>
-
-      {/* Formulario para añadir nueva categoría */}
       <form onSubmit={handleAddCategory} className="add-category-form">
         <input
           type="text"
@@ -136,52 +180,8 @@ const CategoryManagement = () => {
         </button>
       </form>
 
-      {/* Tabla de categorías existentes */}
-      {categories.length === 0 ? (
-        <div className="empty-categories">
-          <p>No hay categorías registradas. ¡Crea la primera!</p>
-        </div>
-      ) : (
-        <table className="category-table">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Nombre</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {categories.map((category) => (
-              <tr key={category.id}>
-                <td data-label="ID">
-                  <span className="category-id">#{category.id}</span>
-                </td>
-                <td data-label="Nombre">
-                  <span className="category-name">{category.nombre}</span>
-                </td>
-                <td data-label="Acciones" className="category-actions">
-                  <button
-                    className="btn-edit-cat"
-                    onClick={() => openEditModal(category)}
-                  >
-                    <FaEdit />
-                    Editar
-                  </button>
-                  <button
-                    className="btn-delete-cat"
-                    onClick={() => openDeleteModal(category)}
-                  >
-                    <FaTrashAlt />
-                    Eliminar
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
-
-      {/* Modal de Edición */}
+      {/* // Componente de tabla de categorias */}
+      {renderedTable}
       {isEditModalOpen && (
         <Modal onClose={closeEditModal}>
           <div className="category-modal-content">
@@ -206,8 +206,6 @@ const CategoryManagement = () => {
           </div>
         </Modal>
       )}
-
-      {/* Modal de Eliminación */}
       {isDeleteModalOpen && (
         <Modal onClose={closeDeleteModal}>
           <div className="category-modal-content">
@@ -242,8 +240,11 @@ const CategoryManagement = () => {
           </div>
         </Modal>
       )}
+      {showSuccessToast && (
+        <SuccessToast mensaje={"Categoría guardada exitosamente!"} />
+      )}
     </div>
   );
 };
 
-export default CategoryManagement;
+export default React.memo(CategoryManagement);

@@ -1,13 +1,12 @@
-const API_URL = `http://localhost:3001/api/productos`;
+import api, { API_URL } from "../config/api";
 
 export const fetchProducts = async () => {
-  const response = await fetch(API_URL);
-  if (!response.ok) throw new Error("No se pudo conectar con el servidor.");
-  return await response.json();
+  const response = await api.get("/productos");
+  return response;
 };
 
 export const createProduct = async (productData) => {
-  const response = await fetch(API_URL, {
+  const response = await fetch(`${API_URL}/api/productos`, {
     method: "POST",
     body: productData, // FormData (no se agrega Content-Type)
   });
@@ -16,25 +15,16 @@ export const createProduct = async (productData) => {
 };
 
 export const getProductById = async (id) => {
-  const response = await fetch(`${API_URL}/${id}`);
-  if (!response.ok) throw new Error("No se encontró el producto.");
-  return await response.json();
+  const response = await api.get(`/productos/${id}`);
+  return response;
 };
 
 export const updateProduct = async (id, productData) => {
-  const response = await fetch(`${API_URL}/${id}`, {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(productData),
-  });
-  if (!response.ok) throw new Error("No se pudo actualizar el producto.");
-  return await response.json();
+  const response = await api.put(`/productos/${id}`, productData);
+  return response;
 };
 
 export const deleteProduct = async (id) => {
-  const response = await fetch(`${API_URL}/${id}`, {
-    method: "DELETE",
-  });
-  if (!response.ok) throw new Error("No se pudo eliminar el producto.");
-  return response.json();
+  const response = await api.delete(`/productos/${id}`);
+  return response;
 };

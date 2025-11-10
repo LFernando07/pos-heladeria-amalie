@@ -1,9 +1,19 @@
+import { memo, useCallback } from "react";
 import "./Modal.css";
 
-const Modal = ({ children, onClose }) => {
+export const Modal = memo(({ children, onClose }) => {
+  // Evita recrear la función en cada render
+  const handleBackdropClick = useCallback(() => {
+    onClose();
+  }, [onClose]);
+
+  const handleContentClick = useCallback((e) => {
+    e.stopPropagation();
+  }, []);
+
   return (
-    <div className="modal-backdrop" onClick={onClose}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+    <div className="modal-backdrop" onClick={handleBackdropClick}>
+      <div className="modal-content" onClick={handleContentClick}>
         <button className="modal-close-btn" onClick={onClose}>
           ×
         </button>
@@ -11,6 +21,4 @@ const Modal = ({ children, onClose }) => {
       </div>
     </div>
   );
-};
-
-export default Modal;
+});

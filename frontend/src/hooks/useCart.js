@@ -1,16 +1,15 @@
-import { useState } from "react";
+import { useState, useCallback, useMemo } from "react";
 
 export const useCart = () => {
-  const [cart, setCart] = useState([]); // El carrito empieza vacío
+  const [cart, setCart] = useState([]);
 
-  const addToCart = (productoAAgregar) => {
+  // 🧠 Memoizamos todas las funciones para evitar recrearlas en cada render
+  const addToCart = useCallback((productoAAgregar) => {
     setCart((prevCarrito) => {
-      // Revisa si el producto ya existe en el carrito
       const productoExistente = prevCarrito.find(
         (item) => item.id === productoAAgregar.id
       );
 
-      // Si existe, incrementa su cantidad
       if (productoExistente) {
         return prevCarrito.map((item) =>
           item.id === productoAAgregar.id
@@ -19,55 +18,61 @@ export const useCart = () => {
         );
       }
 
-      // Si no existe, lo agrega al carrito con cantidad 1
       return [...prevCarrito, { ...productoAAgregar, cantidad: 1 }];
     });
-  };
+  }, []);
 
-  // --- NUEVA FUNCIÓN PARA INCREMENTAR CANTIDAD ---
-  const increaseQuantity = (idProducto) => {
+  const increaseQuantity = useCallback((idProducto) => {
     setCart((prevCarrito) =>
       prevCarrito.map((item) =>
         item.id === idProducto ? { ...item, cantidad: item.cantidad + 1 } : item
       )
     );
-  };
+  }, []);
 
-  // --- NUEVA FUNCIÓN PARA DECREMENTAR CANTIDAD ---
-  const decreaseQuantity = (idProducto) => {
+  const decreaseQuantity = useCallback((idProducto) => {
     setCart((prevCarrito) => {
       const productoExistente = prevCarrito.find(
         (item) => item.id === idProducto
       );
 
-      // Si la cantidad es 1, al decrementar se elimina el producto del carrito
       if (productoExistente && productoExistente.cantidad === 1) {
         return prevCarrito.filter((item) => item.id !== idProducto);
       }
 
-      // Si no, solo se reduce la cantidad en 1
       return prevCarrito.map((item) =>
         item.id === idProducto ? { ...item, cantidad: item.cantidad - 1 } : item
       );
     });
-  };
+  }, []);
 
-  const removeToCart = (productId) => {
+  const removeToCart = useCallback((productId) => {
     setCart((prevCarrito) =>
       prevCarrito.filter((item) => item.id !== productId)
     );
-  };
+  }, []);
 
-  const clearCart = () => {
+  const clearCart = useCallback(() => {
     setCart([]);
-  };
+  }, []);
 
-  return {
-    cart,
-    addToCart,
-    increaseQuantity,
-    decreaseQuantity,
-    removeToCart,
-    clearCart,
-  };
+  // ✅ Devolvemos un objeto memoizado, para que su referencia no cambie
+  return useMemo(
+    () => ({
+      cart,
+      addToCart,
+      increaseQuantity,
+      decreaseQuantity,
+      removeToCart,
+      clearCart,
+    }),
+    [
+      cart,
+      addToCart,
+      increaseQuantity,
+      decreaseQuantity,
+      removeToCart,
+      clearCart,
+    ]
+  );
 };

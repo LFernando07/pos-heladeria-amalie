@@ -1,32 +1,76 @@
-import { BrowserRouter, Routes, Route } from "react-router";
-import { WrapperProducts } from "./components/products/WrapperProducts";
-import { NuevoProducto } from "./components/products/NuevoProducto";
-
-import DashboardLayout from "./components/shared/DashboardLayout"; // <-- Nuevo Layout
-import ProductManagement from "./components/dashboard/ProductManagement"; // <-- Nueva página
-import CategoryManagement from "./components/dashboard/CategoryManagement"; // <-- Nueva página
-import SalesManagement from "./components/dashboard/SalesManagement"; // <-- Nueva página
-import ReportsManagement from "./components/dashboard/reportsManagement"; // <-- Nueva página
+import { Routes, Route, MemoryRouter } from "react-router";
+import { Suspense, lazy } from "react";
 import "./App.css";
+import { AuthProvider } from "./context/AuthContext";
+import { LoginPage } from "./pages/LoginPage";
+import { ProtectedRoute } from "./components/auth/protectedRoute";
+import { NuevoProducto } from "./components/products/NuevoProducto";
+import { PointOfSalePage } from "./pages/PointOfSelePage";
+import { CategoriesProvider } from "./context/CategoryContext";
+import { ProductsProvider } from "./context/ProductsContext";
+import { CartProvider } from "./context/CartContext";
+import { Loader } from "./components/shared/Loader";
+
+// --- Lazy imports (carga bajo demanda) ---
+const DashboardPage = lazy(() => import("./pages/DashboardPage"));
+const ProductManagement = lazy(() =>
+  import("./components/dashboard/ProductManagement")
+);
+const CategoryManagement = lazy(() =>
+  import("./components/dashboard/CategoryManagement")
+);
+const SalesManagement = lazy(() =>
+  import("./components/dashboard/SalesManagement")
+);
+const ReportsManagement = lazy(() =>
+  import("./components/dashboard/reportsManagement")
+);
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<WrapperProducts />} />
+    <MemoryRouter>
+      <AuthProvider>
+        <ProductsProvider>
+          <CategoriesProvider>
+            {/* Suspense muestra algo mientras los componentes cargan */}
+            <Suspense fallback={<Loader />}>
+              <Routes>
+                {/* Rutas públicas */}
+                <Route path="/login" element={<LoginPage />} />
 
-        {/* Rutas del Dashboard
-        estos cambios fueron realizados para que se reconozcan las rutas para el DASHBOARD */}
-        <Route path="/dashboard" element={<DashboardLayout />}>
-          {/* La página por defecto del dashboard será la de productos */}
-          <Route index element={<ProductManagement />} />
-          <Route path="products" element={<ProductManagement />} />
-          <Route path="products/new" element={<NuevoProducto />} />
-          <Route path="categories" element={<CategoryManagement />} />
-          <Route path="sales" element={<SalesManagement />} />
-          <Route path="reports" element={<ReportsManagement />} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+                {/* Ruta principal protegida */}
+                <Route
+                  path="/"
+                  element={
+                    <ProtectedRoute>
+                      <CartProvider>
+                        <PointOfSalePage />
+                      </CartProvider>
+                    </ProtectedRoute>
+                  }
+                />
+
+                {/* Rutas del Dashboard (todas protegidas) */}
+                <Route
+                  path="/dashboard"
+                  element={
+                    <ProtectedRoute>
+                      <DashboardPage />
+                    </ProtectedRoute>
+                  }
+                >
+                  <Route index element={<ProductManagement />} />
+                  <Route path="products" element={<ProductManagement />} />
+                  <Route path="products/new" element={<NuevoProducto />} />
+                  <Route path="categories" element={<CategoryManagement />} />
+                  <Route path="sales" element={<SalesManagement />} />
+                  <Route path="reports" element={<ReportsManagement />} />
+                </Route>
+              </Routes>
+            </Suspense>
+          </CategoriesProvider>
+        </ProductsProvider>
+      </AuthProvider>
+    </MemoryRouter>
   );
 }

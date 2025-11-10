@@ -1,0 +1,32 @@
+{
+  "name": "pos-heladeria-amalie",
+  "version": "1.0.0",
+  "main": "electron/main.js",
+  "scripts": {
+    "postinstall": "cd frontend && npm install && cd ../backend && npm install",
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\" \"npm run dev:electron\"",
+    "dev:electron": "electron .",
+    "dev:backend": "cd backend && npm run dev",
+    "dev:frontend": "cd frontend && npm run dev",
+    "build": "cd frontend && npm run build",
+    "package": "npm run build && electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LFernando07/pos-heladeria-amalie.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/LFernando07/pos-heladeria-amalie/issues"
+  },
+  "homepage": "https://github.com/LFernando07/pos-heladeria-amalie#readme",
+  "description": "",
+  "dependencies": {
+    "electron": "^39.1.1"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}

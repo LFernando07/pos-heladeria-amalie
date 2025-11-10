@@ -1,13 +1,18 @@
-import { useState } from "react";
+import { useCallback, useMemo, useState, memo } from "react";
 import { useFlavours } from "../../hooks/useFlavours";
 import "./Tipos.css";
 
-export const Tipos = ({ productoBase, onClose, onAddToCart }) => {
+export const Tipos = memo(({ productoBase, onClose, onAddToCart }) => {
   const { sabores: tiposData } = useFlavours(productoBase.categoria_id);
   const [tiposSeleccionados, setTiposSeleccionados] = useState([]);
   const [conCobertura, setConCobertura] = useState(false);
 
-  const toggleTipo = (tipo) => {
+  const selectedNombres = useMemo(
+    () => new Set(tiposSeleccionados.map((s) => s.nombre)),
+    [tiposSeleccionados]
+  );
+
+  const toggleTipo = useCallback((tipo) => {
     setTiposSeleccionados((prev) => {
       if (prev.find((s) => s.nombre === tipo.nombre)) {
         return prev.filter((s) => s.nombre !== tipo.nombre);
@@ -19,15 +24,15 @@ export const Tipos = ({ productoBase, onClose, onAddToCart }) => {
         return [...prev, tipo];
       }
     });
-  };
+  }, []);
 
-  const handleAgregarHelado = () => {
+  const handleAgregarHelado = useCallback(() => {
     if (tiposSeleccionados.length === 0) {
       alert("Por favor, selecciona al menos un sabor.");
       return;
     }
 
-    const precioCobertura = conCobertura ? 5 : 0; // Asumimos un precio para la cobertura
+    const precioCobertura = conCobertura ? 5 : 0;
     const nombreTipos = tiposSeleccionados.map((s) => s.nombre).join(", ");
     const nombreFinal = `${productoBase.nombre} (${nombreTipos})${
       conCobertura ? " con cobertura" : ""
@@ -42,11 +47,14 @@ export const Tipos = ({ productoBase, onClose, onAddToCart }) => {
 
     onAddToCart(productoFinal);
     onClose();
-  };
+  }, [conCobertura, productoBase, tiposSeleccionados, onAddToCart, onClose]);
 
-  const isChecked = (nombreTipo) => {
-    return tiposSeleccionados.some((s) => s.nombre === nombreTipo);
-  };
+  const isChecked = useCallback(
+    (nombreTipo) => selectedNombres.has(nombreTipo),
+    [selectedNombres]
+  );
+
+  const tipos = useMemo(() => tiposData, [tiposData]);
 
   return (
     <div className="modal-backdrop" onClick={onClose}>
@@ -56,9 +64,7 @@ export const Tipos = ({ productoBase, onClose, onAddToCart }) => {
         </div>
 
         <div className="tipo-grid">
-          {tiposData.map((tipo) => (
-            // div completo ahora es clickeable
-            // y se le aplica la clase 'selected' dinámicamente.
+          {tipos.map((tipo) => (
             <div
               key={tipo.nombre}
               className={`tipo-card ${
@@ -69,7 +75,6 @@ export const Tipos = ({ productoBase, onClose, onAddToCart }) => {
               <img src={tipo.imagen} alt={tipo.nombre} />
               <div className="nombre">{tipo.nombre}</div>
               {tipo.precio > 0 && <div className="precio">+${tipo.precio}</div>}
-              {/* Dejamos el input oculto por accesibilidad, pero ya no controla el click */}
               <input
                 type="checkbox"
                 checked={isChecked(tipo.nombre)}
@@ -79,11 +84,9 @@ export const Tipos = ({ productoBase, onClose, onAddToCart }) => {
           ))}
         </div>
 
-        {/*estructura para el interruptor de cobertura */}
         {productoBase.categoria === "Helados" && (
           <label className="opcion">
             <span className="opcion-label">Cobertura de chocolate </span>
-            {/* El input está oculto, pero la etiqueta lo activa */}
             <input
               type="checkbox"
               checked={conCobertura}
@@ -106,4 +109,4 @@ export const Tipos = ({ productoBase, onClose, onAddToCart }) => {
       </div>
     </div>
   );
-};
+});

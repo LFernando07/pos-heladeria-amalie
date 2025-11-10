@@ -1,37 +1,45 @@
-import { useCategories } from "../../hooks/useCategories";
+import { memo, useCallback } from "react";
+import { useCategories } from "../../context/CategoryContext";
 import "./Navbar.css";
 
-export const Navbar = ({ onCategoryChange }) => {
+export const Navbar = memo(({ onCategoryChange }) => {
   const { categories, active, setActive } = useCategories();
-  const all = "Todos los productos";
+  const ALL = "Todos los productos";
 
-  const handleClick = (cat) => {
-    setActive(cat);
-    onCategoryChange(cat);
-  };
+  // Memoriza la función para evitar recreaciones innecesarias
+  const handleClick = useCallback(
+    (cat) => {
+      setActive(cat);
+      onCategoryChange?.(cat);
+    },
+    [setActive, onCategoryChange]
+  );
 
   return (
     <nav className="navbar">
       <ul className="navbar-list">
         <li>
           <button
-            className={`cat-btn ${active === all ? "active" : ""}`}
-            onClick={() => handleClick(all)}
+            type="button"
+            className={`cat-btn ${active === ALL ? "active" : ""}`}
+            onClick={() => handleClick(ALL)}
           >
-            {all}
+            {ALL}
           </button>
         </li>
-        {categories.map((cat) => (
-          <li key={cat.id}>
+
+        {categories.map(({ id, nombre }) => (
+          <li key={id}>
             <button
-              className={`cat-btn ${active === cat.nombre ? "active" : ""}`}
-              onClick={() => handleClick(cat.nombre)}
+              type="button"
+              className={`cat-btn ${active === nombre ? "active" : ""}`}
+              onClick={() => handleClick(nombre)}
             >
-              {cat.nombre}
+              {nombre}
             </button>
           </li>
         ))}
       </ul>
     </nav>
   );
-};
+});

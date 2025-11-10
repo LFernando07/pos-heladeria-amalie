@@ -1,4 +1,8 @@
-const { createSaleService } = require("./sales.service");
+const {
+  createSaleService,
+  getAllSalesService,
+  getSaleDetailsService,
+} = require("./sales.service");
 
 // Crear una nueva venta
 function createSale(req, res) {
@@ -24,6 +28,24 @@ function createSale(req, res) {
   });
 }
 
+function getAllSales(req, res) {
+  getAllSalesService((err, ventas) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json({ data: ventas });
+  });
+}
+
+function getSaleDetails(req, res) {
+  const { id } = req.params;
+
+  getSaleDetailsService(id, (err, detalles) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json({ data: detalles });
+  });
+}
+
 module.exports = {
   createSale,
+  getAllSales,
+  getSaleDetails,
 };

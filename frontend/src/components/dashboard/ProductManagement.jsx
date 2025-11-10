@@ -1,10 +1,10 @@
-import { Link } from "react-router-dom";
-import { useState } from "react";
-import { useProducts } from "../../hooks/useProducts";
-import { useCategories } from "../../hooks/useCategories";
-import { FaTrashAlt, FaEdit } from "react-icons/fa";
+import React, { useCallback, useMemo, useState } from "react";
+import { useCategories } from "../../context/CategoryContext";
+import { useProducts } from "../../context/ProductsContext";
+import { Link } from "react-router";
+import { Modal } from "../shared/Modal";
 import { MdOutlineCreate } from "react-icons/md";
-import Modal from "../shared/Modal";
+import { FaTrashAlt, FaEdit } from "react-icons/fa";
 import "./ProductManagement.css";
 
 const ProductManagement = () => {
@@ -31,24 +31,25 @@ const ProductManagement = () => {
   const [productToDelete, setProductToDelete] = useState(null);
 
   // Abrir modal de edición
-  const openEditModal = (product) => {
+  const openEditModal = useCallback((product) => {
     setEditingProduct(product);
     setEditProductName(product.nombre);
     setEditProductPrice(product.precio);
     setEditProductCategory(product.categoria_id);
     setIsEditModalOpen(true);
-  };
+  }, []);
 
   // Cerrar modal de edición
-  const closeEditModal = () => {
+  const closeEditModal = useCallback(() => {
     setIsEditModalOpen(false);
     setEditingProduct(null);
     setEditProductName("");
     setEditProductPrice(0);
-  };
+    setEditProductCategory("");
+  }, []);
 
   // Confirmar edición
-  const confirmEdit = async () => {
+  const confirmEdit = useCallback(async () => {
     if (!editProductName.trim()) {
       alert("El nombre del producto no puede estar vacío.");
       return;
@@ -83,23 +84,30 @@ const ProductManagement = () => {
     } catch (err) {
       alert(err.message);
     }
-  };
+  }, [
+    editProductName,
+    editProductPrice,
+    editProductCategory,
+    editingProduct,
+    editProduct,
+    refreshProducts,
+    closeEditModal,
+  ]);
 
   // Abrir modal de eliminación
-  const handleDeleteClick = (product) => {
+  const handleDeleteClick = useCallback((product) => {
     setProductToDelete(product);
     setIsDeleteModalOpen(true);
-  };
+  }, []);
 
   // Cerrar modal de eliminación
-  const cancelDelete = () => {
+  const cancelDelete = useCallback(() => {
     setIsDeleteModalOpen(false);
     setProductToDelete(null);
-  };
+  }, []);
 
   // Confirmar eliminación
-  const confirmDelete = async () => {
-    console.log(productToDelete);
+  const confirmDelete = useCallback(async () => {
     try {
       await removeProduct(productToDelete.id);
       setIsDeleteModalOpen(false);
@@ -108,70 +116,43 @@ const ProductManagement = () => {
     } catch (err) {
       alert(err.message);
     }
-  };
+  }, [productToDelete, refreshProducts, removeProduct]);
 
-  // Estados de carga y error
-  if (loading) {
-    return (
-      <div className="product-management-container">
-        <div className="product-loading">Cargando catalogo productos...</div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="product-management-container">
-        <div className="product-error">
-          Error al cargar los productos: {error}
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="product-management-container">
-      <div className="product-page-header">
-        <h1>Catálogo de Productos</h1>
-        <Link to="/dashboard/products/new" className="btn-add-product">
-          <MdOutlineCreate size={20} /> Agregar Producto
-        </Link>
-      </div>
-
-      {products.length === 0 ? (
+  const renderTable = useMemo(() => {
+    if (products.length === 0) {
+      return (
         <div className="empty-products">
           <p>No hay productos registrados.</p>
           <Link to="/dashboard/products/new" className="btn-add-product">
             <MdOutlineCreate size={20} /> Crear primer producto
           </Link>
         </div>
-      ) : (
-        <table className="product-management-table">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Imagen</th>
-              <th>Nombre</th>
-              <th>Precio</th>
-              <th>Categoría</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {products.map((product) => (
+      );
+    }
+
+    return (
+      <table className="product-management-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Imagen</th>
+            <th>Nombre</th>
+            <th>Precio</th>
+            <th>Categoría</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {products.map((product) => {
+            const imagenProducto = product.imagen || "./images/placeholder.png";
+            return (
               <tr key={product.id}>
                 <td data-label="ID">
                   <span className="product-id">#{product.id}</span>
                 </td>
                 <td data-label="Imagen">
                   <img
-                    src={
-                      product.imagen
-                        ? product.imagen[0] === "."
-                          ? product.imagen.slice(1)
-                          : product.imagen
-                        : "/images/placeholder.png"
-                    }
+                    src={imagenProducto}
                     alt={product.nombre}
                     className="product-table-img"
                   />
@@ -204,10 +185,43 @@ const ProductManagement = () => {
                   </button>
                 </td>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
+            );
+          })}
+        </tbody>
+      </table>
+    );
+  }, [handleDeleteClick, openEditModal, products]);
+
+  // Estados de carga y error
+  if (loading) {
+    return (
+      <div className="product-management-container">
+        <div className="product-loading">Cargando catalogo de productos...</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="product-management-container">
+        <div className="product-error">
+          Error al cargar los productos: {error}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="product-management-container">
+      <div className="product-page-header">
+        <h1>Catálogo de Productos</h1>
+        <Link to="/dashboard/products/new" className="btn-add-product">
+          <MdOutlineCreate size={20} /> Agregar Producto
+        </Link>
+      </div>
+
+      {/* // Componente de tabla de products */}
+      {renderTable}
 
       {/* Modal de Edición */}
       {isEditModalOpen && (
@@ -228,7 +242,6 @@ const ProductManagement = () => {
               onChange={(e) => setEditProductPrice(e.target.value)}
               className="product-modal-input"
               placeholder="Precio del producto"
-              autoFocus
               onKeyDown={(e) => e.key === "Enter" && confirmEdit()}
             />
             <select
@@ -244,10 +257,16 @@ const ProductManagement = () => {
               ))}
             </select>
             <div className="product-modal-buttons">
-              <button onClick={closeEditModal} className="btn-cancel">
+              <button
+                onClick={closeEditModal}
+                className="btn-cancel-edit-product"
+              >
                 Cancelar
               </button>
-              <button onClick={confirmEdit} className="btn-confirm">
+              <button
+                onClick={confirmEdit}
+                className="btn-confirm-edit-product"
+              >
                 Guardar Cambios
               </button>
             </div>
@@ -303,4 +322,4 @@ const ProductManagement = () => {
   );
 };
 
-export default ProductManagement;
+export default React.memo(ProductManagement);

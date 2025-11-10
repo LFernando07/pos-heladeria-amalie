@@ -1,28 +1,43 @@
-import React, { useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
+import { useAuth } from "../../context/AuthContext";
 import {
   getSalesReport,
   sendReportByEmail,
 } from "../../services/reports.service";
-import jsPDF from "jspdf";
-import autoTable from "jspdf-autotable";
-import * as XLSX from "xlsx";
-import logo from "../../../images/logo_amelie.png";
 import {
   FaFilePdf,
   FaFileExcel,
   FaClipboardList,
   FaRegEnvelopeOpen,
 } from "react-icons/fa";
+import { Modal } from "../shared/Modal";
+import { SuccessToast } from "../shared/SuccessToast";
+import * as XLSX from "xlsx";
+import logo from "../../../images/logo_amelie.png";
 import "./ReportsManagement.css";
 
 const ReportsManagement = () => {
-  const currentUser = { name: "Jake Ponciano" };
+  const { user } = useAuth();
 
   // Estados para las fechas, los datos del reporte y la carga
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [reportData, setReportData] = useState([]);
   const [loading, setLoading] = useState(false);
+
+  // Estados para enviar correos sin usar 'prompt'
+  const [showEmailModal, setShowEmailModal] = useState(false);
+  const [email, setEmail] = useState("");
+
+  const [showSuccessToast, setShowSuccessToast] = useState(false);
+
+  const openEmailModal = useCallback(() => {
+    setShowEmailModal(true);
+  }, []);
+
+  const closeEmailModal = useCallback(() => {
+    setShowEmailModal(false);
+  }, []);
 
   const handleGenerateReport = async () => {
     if (!startDate || !endDate) {
@@ -41,7 +56,10 @@ const ReportsManagement = () => {
   };
 
   // ===== FUNCIÓN REUTILIZABLE PARA GENERAR PDF =====
-  const generatePDF = () => {
+  const generatePDF = useCallback(async () => {
+    const { jsPDF } = await import("jspdf");
+    const { autoTable } = await import("jspdf-autotable");
+
     return new Promise((resolve, reject) => {
       const img = new Image();
       img.src = logo;
@@ -87,7 +105,7 @@ const ReportsManagement = () => {
           doc.setFont("helvetica", "bold");
           doc.text("Solicitado por:", 15, 58);
           doc.setFont("helvetica", "normal");
-          doc.text(currentUser.name, 70, 58);
+          doc.text(user.nombre, 70, 58);
 
           doc.setFont("helvetica", "bold");
           doc.text("Período:", 15, 65);
@@ -204,7 +222,7 @@ const ReportsManagement = () => {
               sale.fecha,
               sale.hora,
               `$${sale.total.toFixed(2)}`,
-              currentUser.name,
+              sale.empleado_nombre,
             ]),
             startY: 125,
             theme: "striped",
@@ -276,20 +294,20 @@ const ReportsManagement = () => {
         reject(new Error("Error al cargar el logo"));
       };
     });
-  };
+  }, [startDate, endDate, reportData, user.nombre]);
 
   // ===== EXPORTAR PDF (DESCARGAR) =====
-  const exportToPDF = async () => {
+  const exportToPDF = useCallback(async () => {
     try {
       const doc = await generatePDF();
       doc.save(`reporte_ventas_${startDate}_a_${endDate}.pdf`);
     } catch (error) {
       alert("Error al generar el PDF: " + error.message);
     }
-  };
+  }, [startDate, endDate, generatePDF]);
 
   // ===== EXPORTAR A EXCEL =====
-  const exportToExcel = () => {
+  const exportToExcel = useCallback(() => {
     const worksheet = XLSX.utils.json_to_sheet(
       reportData.map((sale) => ({
         Folio: sale.id,
@@ -298,21 +316,19 @@ const ReportsManagement = () => {
         Total: sale.total,
         Pagado: sale.pagado,
         Cambio: sale.cambio,
-        Empleado: currentUser.name,
+        Empleado: sale.empleado_nombre,
       }))
     );
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Ventas");
     XLSX.writeFile(workbook, `reporte_ventas_${startDate}_a_${endDate}.xlsx`);
-  };
+  }, [startDate, endDate, reportData]);
 
   // ===== ENVIAR POR CORREO =====
-  const handleEmailReport = async () => {
-    const recipientEmail = prompt(
-      "Por favor, introduce el correo del destinatario:"
-    );
-    if (!recipientEmail) {
-      return; // El usuario canceló o no escribió nada
+  const handleEmailReport = useCallback(async () => {
+    if (!email.trim()) {
+      alert("Introduce una direccion de correo electronica valida");
+      return;
     }
 
     try {
@@ -322,7 +338,7 @@ const ReportsManagement = () => {
 
       // Preparar los datos para enviar
       const formData = new FormData();
-      formData.append("to", recipientEmail);
+      formData.append("to", email);
       formData.append(
         "subject",
         `Reporte de Ventas Heladería Amelie (${startDate} a ${endDate})`
@@ -338,13 +354,63 @@ const ReportsManagement = () => {
       );
 
       // Llamar al servicio para enviar el correo
-      const result = await sendReportByEmail(formData);
-      alert("¡Correo enviado con éxito!");
-      console.log(result);
+      await sendReportByEmail(formData);
+      setShowSuccessToast(true);
+
+      setTimeout(() => {
+        closeEmailModal();
+      }, 1000);
     } catch (error) {
       alert("Error al enviar el correo: " + error.message);
     }
-  };
+  }, [startDate, endDate, closeEmailModal, generatePDF, email]);
+
+  const renderReportTable = useMemo(() => {
+    if (reportData.length === 0) return null;
+
+    return (
+      <table className="management-table">
+        <thead>
+          <tr>
+            <th>Folio</th>
+            <th>Fecha</th>
+            <th>Hora</th>
+            <th>Total</th>
+            <th>Empleado</th>
+          </tr>
+        </thead>
+        <tbody>
+          {reportData.map((sale) => (
+            <tr key={sale.id}>
+              <td>#{sale.id}</td>
+              <td>{sale.fecha}</td>
+              <td>{sale.hora}</td>
+              <td>${(sale.total || 0).toFixed(2)}</td>
+              <td>{sale.empleado_nombre}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    );
+  }, [reportData]);
+
+  const exportButtons = useMemo(
+    () => (
+      <div className="export-buttons">
+        <button onClick={exportToPDF} className="btnpdf">
+          <span>Exportar a PDF</span> <FaFilePdf />
+        </button>
+        <button onClick={exportToExcel} className="btnexcel">
+          <span>Exportar a Excel</span> <FaFileExcel />
+        </button>
+        <button onClick={openEmailModal} className="btn-email">
+          <span>Enviar por Correo</span>{" "}
+          <FaRegEnvelopeOpen className="icon-email" />
+        </button>
+      </div>
+    ),
+    [exportToPDF, exportToExcel, openEmailModal]
+  );
 
   return (
     <div className="management-container">
@@ -380,44 +446,36 @@ const ReportsManagement = () => {
         </button>
       </div>
 
-      {reportData.length > 0 && (
-        <div className="export-buttons">
-          <button onClick={exportToPDF} className="btnpdf">
-            <span>Exportar a PDF</span> <FaFilePdf />
-          </button>
-          <button onClick={exportToExcel} className="btnexcel">
-            <span>Exportar a Excel</span> <FaFileExcel />
-          </button>
-          <button onClick={handleEmailReport} className="btn-email">
-            <span>Enviar por Correo</span>{" "}
-            <FaRegEnvelopeOpen className="icon-email" />
-          </button>
-        </div>
+      {reportData.length > 0 && exportButtons}
+      {renderReportTable}
+
+      {showEmailModal && (
+        <Modal onClose={closeEmailModal}>
+          <div className="product-modal-content">
+            <div style={{ fontSize: "3rem", marginBottom: "1rem" }}>⚠️</div>
+            <h2>Enviar Reporte por Email</h2>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="product-modal-input"
+              placeholder="example@gmail.com"
+              autoFocus
+            />
+          </div>
+          <div className="report-modal-buttons">
+            <button onClick={closeEmailModal} className="btn-cancel">
+              Cancelar
+            </button>
+            <button onClick={handleEmailReport} className="btn-confirm">
+              Enviar
+            </button>
+          </div>
+        </Modal>
       )}
 
-      {reportData.length > 0 && (
-        <table className="management-table">
-          <thead>
-            <tr>
-              <th>Folio</th>
-              <th>Fecha</th>
-              <th>Hora</th>
-              <th>Total</th>
-              <th>Empleado</th>
-            </tr>
-          </thead>
-          <tbody>
-            {reportData.map((sale) => (
-              <tr key={sale.id}>
-                <td>#{sale.id}</td>
-                <td>{sale.fecha}</td>
-                <td>{sale.hora}</td>
-                <td>${(sale.total || 0).toFixed(2)}</td>
-                <td>{currentUser.name}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      {showSuccessToast && (
+        <SuccessToast mensaje={"¡Correo enviado exitosamente!"} />
       )}
     </div>
   );

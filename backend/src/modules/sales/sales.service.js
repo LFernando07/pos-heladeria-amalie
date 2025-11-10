@@ -2,6 +2,8 @@ const {
   createSaleModel,
   getCountSalesModel,
   createSaleProductsModel,
+  getAllSalesModel,
+  getSaleDetailsModel,
 } = require("./sales.model");
 
 const createSaleService = (saleData, callback) => {
@@ -44,6 +46,22 @@ const createSaleService = (saleData, callback) => {
   });
 };
 
+const getAllSalesService = (callback) => {
+  getAllSalesModel((err, ventas) => {
+    if (err) return callback(err);
+    callback(null, ventas);
+  });
+};
+
+const getSaleDetailsService = (ventaId, callback) => {
+  getSaleDetailsModel(ventaId, (err, detalles) => {
+    if (err) return callback(err);
+    callback(null, detalles);
+  });
+};
+
 module.exports = {
   createSaleService,
+  getAllSalesService,
+  getSaleDetailsService,
 };

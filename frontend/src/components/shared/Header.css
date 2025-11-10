@@ -25,7 +25,7 @@
   align-items: center;
   max-width: 24px;
   gap: 8px;
-  background: #ff7e5f;
+  background: #c0392b;
   padding: 10px 15px;
   box-shadow: 0 0 2px 2px white;
   color: white;
@@ -33,4 +33,41 @@
   border-radius: 8px;
   font-weight: bold;
   transition: background-color 0.3s ease;
+}
+
+.add-product-link:hover {
+  background: #9b159b;
+}
+
+.add-product-link:hover > * {
+  transform: rotateZ(360deg) scale(1.4);
+  transition: all 1s ease-in;
+}
+
+.logout-action {
+  position: absolute;
+  top: 55px;
+  left: 95%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 50px;
+  gap: 8px;
+  background: #c0392b;
+  padding: 10px 15px;
+  box-shadow: 0 0 2px 2px white;
+  color: white;
+  text-decoration: none; /* Quita el subrayado del enlace */
+  border-radius: 8px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.logout-action:hover {
+  background: #ff0000;
+}
+
+.logout-action:hover > * {
+  transform: rotateY(360deg) scale(1.4);
+  transition: all 1s ease-in;
 }

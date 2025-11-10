@@ -1,7 +1,8 @@
+import { memo } from "react";
 import "./SuccessToast.css";
 
 // --- Componente para la Animación de Éxito ---
-export const SuccessToast = ({ mensaje }) => {
+export const SuccessToast = memo(({ mensaje }) => {
   return (
     <div className="success-toast">
       <div className="success-icon">
@@ -12,4 +13,4 @@ export const SuccessToast = ({ mensaje }) => {
       <p>{mensaje}</p>
     </div>
   );
-};
+});
