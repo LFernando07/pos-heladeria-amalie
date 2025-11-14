@@ -1,3 +1,4 @@
+// src/modules/employees/employees.routes.js
 const express = require("express");
 const {
   getAllUsers,
@@ -10,43 +11,36 @@ const {
   changePassword,
   deleteUser,
 } = require("./employees.controller");
-
 const {
   verifyTokenMiddleware,
   requireRole,
 } = require("../../middlewares/auth.middleware");
 
 module.exports = () => {
-  const routerEmployees = express.Router();
+  const router = express.Router();
 
-  routerEmployees.post("/register", register); // podría protegerse en prod para admins
-  routerEmployees.post("/login", login);
-  routerEmployees.post("/logout", logout);
+  // Rutas públicas
+  router.post("/login", login);
+  router.post("/logout", logout);
 
-  routerEmployees.get("/me", verifyTokenMiddleware, getMe);
-
-  // Rutas protegidas (ejemplo: solo admin puede listar/borrar)
-  routerEmployees.get(
-    "/",
+  // Rutas protegidas
+  router.get("/me", verifyTokenMiddleware, getMe);
+  router.post(
+    "/register",
     verifyTokenMiddleware,
     requireRole("admin"),
-    getAllUsers
+    register
   );
-  routerEmployees.get(
-    "/:id",
-    verifyTokenMiddleware,
-    requireRole("admin"),
-    getUserById
-  );
-  routerEmployees.get("/:id", verifyTokenMiddleware, getAllUsers); // o getUserById
-  routerEmployees.put("/:id", verifyTokenMiddleware, updateUser);
-  routerEmployees.put("/:id/password", verifyTokenMiddleware, changePassword);
-  routerEmployees.delete(
+  router.get("/", verifyTokenMiddleware, requireRole("admin"), getAllUsers);
+  router.get("/:id", verifyTokenMiddleware, requireRole("admin"), getUserById);
+  router.put("/:id", verifyTokenMiddleware, updateUser);
+  router.put("/:id/password", verifyTokenMiddleware, changePassword);
+  router.delete(
     "/:id",
     verifyTokenMiddleware,
     requireRole("admin"),
     deleteUser
   );
 
-  return routerEmployees;
+  return router;
 };

@@ -3,13 +3,16 @@ import { Suspense, lazy } from "react";
 import "./App.css";
 import { AuthProvider } from "./context/AuthContext";
 import { LoginPage } from "./pages/LoginPage";
-import { ProtectedRoute } from "./components/auth/protectedRoute";
 import { NuevoProducto } from "./components/products/NuevoProducto";
 import { PointOfSalePage } from "./pages/PointOfSelePage";
 import { CategoriesProvider } from "./context/CategoryContext";
 import { ProductsProvider } from "./context/ProductsContext";
 import { CartProvider } from "./context/CartContext";
 import { Loader } from "./components/shared/Loader";
+import UsersManagement from "./components/dashboard/UsersManagement";
+import { RegisterPage } from "./pages/RegisterPage";
+import { ProtectedRoute } from "./components/auth/ProtectedRoute";
+import { AdminRoute } from "./components/auth/AdminRoute";
 
 // --- Lazy imports (carga bajo demanda) ---
 const DashboardPage = lazy(() => import("./pages/DashboardPage"));
@@ -62,6 +65,24 @@ export default function App() {
                   <Route index element={<ProductManagement />} />
                   <Route path="products" element={<ProductManagement />} />
                   <Route path="products/new" element={<NuevoProducto />} />
+
+                  <Route
+                    path="users"
+                    element={
+                      <AdminRoute>
+                        <UsersManagement />
+                      </AdminRoute>
+                    }
+                  />
+                  <Route
+                    path="users/new"
+                    element={
+                      <AdminRoute>
+                        <RegisterPage />
+                      </AdminRoute>
+                    }
+                  />
+
                   <Route path="categories" element={<CategoryManagement />} />
                   <Route path="sales" element={<SalesManagement />} />
                   <Route path="reports" element={<ReportsManagement />} />

@@ -183,6 +183,29 @@
   box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
 }
 
+.btn-confirm-cat {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.625rem 1rem;
+  background: linear-gradient(135deg, #2abd1d 0%, #27b037 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 10px rgba(231, 76, 60, 0.3);
+}
+
+.btn-confirm-cat:hover {
+  background: linear-gradient(135deg, #2fc522 0%, #27b037 100%);
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(231, 76, 60, 0.4);
+}
+
 .btn-delete-cat {
   display: flex;
   align-items: center;

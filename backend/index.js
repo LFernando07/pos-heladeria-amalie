@@ -1,7 +1,6 @@
 const dotenv = require("dotenv");
 dotenv.config();
 const express = require("express");
-const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const multer = require("multer");
 const path = require("path");
@@ -14,21 +13,14 @@ const routerCategoryFlavours = require("./src/modules/categories-flavours/catego
 const routerSales = require("./src/modules/sales/sales.routes");
 const routerReports = require("./src/modules/reports/reports.routes");
 const routerProducts = require("./src/modules/products/products.routes");
-const routerEmployees = require("./src/modules/employees/employees.routes")();
+const routerEmployees = require("./src/modules/employees/employees.routes");
 
 const app = express();
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 
 // Middlewares
-// app.use(cors());
-app.use(
-  cors({
-    origin: "http://localhost:5173", // tu frontend Vite
-    credentials: true, // permite el envío de cookies
-  })
-);
+app.use(cors());
 app.use(express.json());
-app.use(cookieParser());
 
 // Servir imágenes
 app.use("/images", express.static(path.join(__dirname, "images")));
@@ -57,9 +49,11 @@ app.use("/api/ventas", routerSales);
 app.use("/api/categorias", routerCategories);
 app.use("/api/sabores", routerFlavours);
 app.use("/api/categorias-sabores", routerCategoryFlavours);
-app.use("/api/employees", routerEmployees);
+app.use("/api/employees", routerEmployees());
 app.use("/api/reports", routerReports);
 
 app.listen(PORT, () =>
   console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`)
 );
+
+module.exports = app;

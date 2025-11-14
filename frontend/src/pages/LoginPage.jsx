@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useMemo } from "react";
 import "./LoginPage.css";
 import { useAuth } from "../context/AuthContext";
-import logo from "../../images/logo_amelie.png";
+import logo from "../assets/logo_amelie.png";
 
 export const LoginPage = () => {
   const { login } = useAuth();
@@ -21,7 +21,7 @@ export const LoginPage = () => {
       }
 
       try {
-        await login(usuario, password);
+        await login({ usuario, password });
       } catch (err) {
         setError(err.message);
       }

@@ -1,5 +1,6 @@
 import { useCallback, useMemo, useState, memo } from "react";
 import { useFlavours } from "../../hooks/useFlavours";
+import { API_URL } from "../../config/api";
 import "./Tipos.css";
 
 export const Tipos = memo(({ productoBase, onClose, onAddToCart }) => {
@@ -72,7 +73,12 @@ export const Tipos = memo(({ productoBase, onClose, onAddToCart }) => {
               }`}
               onClick={() => toggleTipo(tipo)}
             >
-              <img src={tipo.imagen} alt={tipo.nombre} />
+              <img
+                src={`${API_URL}${tipo.imagen
+                  .toString()
+                  .substring(1, tipo.imagen.toString().length)}`}
+                alt={tipo.nombre}
+              />
               <div className="nombre">{tipo.nombre}</div>
               {tipo.precio > 0 && <div className="precio">+${tipo.precio}</div>}
               <input

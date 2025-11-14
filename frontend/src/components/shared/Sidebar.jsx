@@ -4,7 +4,7 @@ import "./Sidebar.css";
 import { useAuth } from "../../context/AuthContext";
 
 export const Sidebar = memo(() => {
-  const { logout } = useAuth();
+  const { user, logout } = useAuth();
 
   // Memoriza los ítems para evitar recreación del arreglo en cada render
   const items = useMemo(
@@ -42,6 +42,18 @@ export const Sidebar = memo(() => {
             {name}
           </NavLink>
         ))}
+
+        {user.rol === "admin" && (
+          <NavLink
+            to="/dashboard/users"
+            className={({ isActive }) =>
+              `sidebar-link ${isActive ? "active" : ""}`
+            }
+            end={"/dashboard/users" === "/"} // Evita que "/" esté activo junto con rutas hijas
+          >
+            Usuarios
+          </NavLink>
+        )}
 
         <Link to="/login" className="sidebar-link" onClick={handleLogout}>
           Cerrar Sesión

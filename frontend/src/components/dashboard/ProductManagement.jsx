@@ -6,8 +6,12 @@ import { Modal } from "../shared/Modal";
 import { MdOutlineCreate } from "react-icons/md";
 import { FaTrashAlt, FaEdit } from "react-icons/fa";
 import "./ProductManagement.css";
+import { API_URL } from "../../config/api";
+import { useAuth } from "../../context/AuthContext";
 
 const ProductManagement = () => {
+  const { user } = useAuth();
+
   const {
     products,
     loading,
@@ -25,6 +29,8 @@ const ProductManagement = () => {
   const [editProductName, setEditProductName] = useState("");
   const [editProductPrice, setEditProductPrice] = useState(0);
   const [editProductCategory, setEditProductCategory] = useState("");
+  const [editProductImage, setEditProductImage] = useState(null);
+  const [previewImage, setPreviewImage] = useState("");
 
   // Estados para el modal de eliminacion
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -36,6 +42,8 @@ const ProductManagement = () => {
     setEditProductName(product.nombre);
     setEditProductPrice(product.precio);
     setEditProductCategory(product.categoria_id);
+    setPreviewImage(API_URL + product.imagen.substring(1)); // muestra imagen actual
+    setEditProductImage(null);
     setIsEditModalOpen(true);
   }, []);
 
@@ -59,28 +67,25 @@ const ProductManagement = () => {
       return;
     }
 
-    // Comprobar si realmente hubo algún cambio
-    const noChanges =
-      editProductName === editingProduct.nombre &&
-      parseFloat(editProductPrice) === parseFloat(editingProduct.precio) &&
-      parseInt(editProductCategory) === editingProduct.categoria_id;
+    const data = new FormData();
+    data.append("nombre", editProductName);
+    data.append("precio", editProductPrice);
+    data.append("categoria_id", parseInt(editProductCategory));
+    data.append("requiere_sabor", editingProduct.requiere_sabor);
+    data.append("disponible", editingProduct.disponible);
 
-    if (noChanges) {
-      return;
+    if (editProductImage) {
+      data.append("imagen", editProductImage); // solo si hay nueva imagen
     }
-
-    const data = {
-      nombre: editProductName,
-      precio: editProductPrice,
-      categoria_id: parseInt(editProductCategory),
-      requiere_sabor: editingProduct.requiere_sabor,
-      disponible: editingProduct.disponible,
-    };
 
     try {
       await editProduct(editingProduct.id, data);
-      refreshProducts();
-      closeEditModal();
+
+      // Espera un poco para que el backend guarde físicamente la imagen
+      setTimeout(async () => {
+        await refreshProducts();
+        closeEditModal();
+      }, 500);
     } catch (err) {
       alert(err.message);
     }
@@ -88,6 +93,7 @@ const ProductManagement = () => {
     editProductName,
     editProductPrice,
     editProductCategory,
+    editProductImage,
     editingProduct,
     editProduct,
     refreshProducts,
@@ -139,7 +145,7 @@ const ProductManagement = () => {
             <th>Nombre</th>
             <th>Precio</th>
             <th>Categoría</th>
-            <th>Acciones</th>
+            {user.rol === "admin" && <th>Acciones</th>}
           </tr>
         </thead>
         <tbody>
@@ -152,7 +158,9 @@ const ProductManagement = () => {
                 </td>
                 <td data-label="Imagen">
                   <img
-                    src={imagenProducto}
+                    src={`${API_URL}${imagenProducto.substring(1)}?t=${
+                      product.updated_at || Date.now()
+                    }`}
                     alt={product.nombre}
                     className="product-table-img"
                   />
@@ -168,29 +176,31 @@ const ProductManagement = () => {
                 <td data-label="Categoría">
                   <span className="product-category">{product.categoria}</span>
                 </td>
-                <td data-label="Acciones" className="product-actions-cell">
-                  <button
-                    className="btn-edit-product"
-                    onClick={() => openEditModal(product)}
-                  >
-                    <FaEdit />
-                    Editar
-                  </button>
-                  <button
-                    className="btn-delete-product"
-                    onClick={() => handleDeleteClick(product)}
-                  >
-                    <FaTrashAlt />
-                    Eliminar
-                  </button>
-                </td>
+                {user.rol === "admin" && (
+                  <td data-label="Acciones" className="product-actions-cell">
+                    <button
+                      className="btn-edit-product"
+                      onClick={() => openEditModal(product)}
+                    >
+                      <FaEdit />
+                      Editar
+                    </button>
+                    <button
+                      className="btn-delete-product"
+                      onClick={() => handleDeleteClick(product)}
+                    >
+                      <FaTrashAlt />
+                      Eliminar
+                    </button>
+                  </td>
+                )}
               </tr>
             );
           })}
         </tbody>
       </table>
     );
-  }, [handleDeleteClick, openEditModal, products]);
+  }, [handleDeleteClick, openEditModal, products, user]);
 
   // Estados de carga y error
   if (loading) {
@@ -256,6 +266,39 @@ const ProductManagement = () => {
                 </option>
               ))}
             </select>
+            <div className="product-image-section">
+              <label style={{ display: "block", marginBottom: "0.5rem" }}>
+                Imagen del producto:
+              </label>
+
+              {/* Vista previa de imagen */}
+              {previewImage && (
+                <img
+                  src={previewImage}
+                  alt="Vista previa"
+                  style={{
+                    width: "120px",
+                    height: "120px",
+                    objectFit: "cover",
+                    borderRadius: "10px",
+                    marginBottom: "1rem",
+                    border: "1px solid #ddd",
+                  }}
+                />
+              )}
+
+              {/* Input para nueva imagen */}
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => {
+                  const file = e.target.files[0];
+                  setEditProductImage(file);
+                  setPreviewImage(URL.createObjectURL(file)); // previsualiza nueva imagen
+                }}
+              />
+            </div>
+
             <div className="product-modal-buttons">
               <button
                 onClick={closeEditModal}

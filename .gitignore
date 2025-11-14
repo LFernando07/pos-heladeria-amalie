@@ -22,6 +22,7 @@ out/
 # Database
 *.db
 *.db-journal
+*.sqlite
 
 # OS generated files
 .DS_Store
@@ -41,3 +42,4 @@ backend/dist/
 build/
 coverage/
 /generated/prisma
+app/

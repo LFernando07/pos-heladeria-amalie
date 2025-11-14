@@ -1,3 +1,4 @@
+// src/modules/employees/employees.service.js
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const {
@@ -10,12 +11,20 @@ const {
   deleteUserModel,
 } = require("./employees.model");
 
-const JWT_SECRET = process.env.JWT_SECRET || "dev_secret";
-const JWT_EXPIRES = process.env.JWT_EXPIRES || "7d"; // ej. '7d'
+const JWT_SECRET = process.env.JWT_SECRET || "tu_clave_secreta_super_segura";
+const JWT_EXPIRES = process.env.JWT_EXPIRES || "24h";
 
+// =======================================================
+// 🧠 Servicios
+// =======================================================
+
+// Obtener todos los usuarios
 const getAllUsersService = (callback) => getAllUsersModel(callback);
+
+// Obtener un usuario por ID
 const getUserByIdService = (id, callback) => getUserByIdModel(id, callback);
 
+// Registro de usuario (solo admin)
 const registerUserService = (userData, callback) => {
   const { password } = userData;
   bcrypt.hash(password, 10, (err, hashed) => {
@@ -25,27 +34,32 @@ const registerUserService = (userData, callback) => {
   });
 };
 
+// Login de usuario
 const loginService = (usuario, password, callback) => {
   getUserFullByUsernameModel(usuario, (err, user) => {
     if (err) return callback(err);
-    if (!user) return callback(new Error("Usuario no encontrado"));
+    if (!user) return callback(new Error("Credenciales inválidas"));
 
     bcrypt.compare(password, user.password, (errCmp, same) => {
       if (errCmp) return callback(errCmp);
       if (!same) return callback(new Error("Credenciales inválidas"));
 
+      // Token JWT
       const payload = {
         id: user.id,
         usuario: user.usuario,
-        nombre: user.nombre + " " + user.apellido,
         rol: user.rol,
+        email: user.email,
+        nombre: user.nombre + " " + user.apellido,
       };
+
       const token = jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRES });
       callback(null, { token, user: payload });
     });
   });
 };
 
+// Actualizar usuario
 const updateUserService = (id, data, callback) => {
   updateUserModel(id, data, (err, result) => {
     if (err) return callback(err);
@@ -54,6 +68,7 @@ const updateUserService = (id, data, callback) => {
   });
 };
 
+// Cambiar contraseña
 const changePasswordService = (id, newPassword, callback) => {
   bcrypt.hash(newPassword, 10, (err, hashed) => {
     if (err) return callback(err);
@@ -61,6 +76,7 @@ const changePasswordService = (id, newPassword, callback) => {
   });
 };
 
+// Eliminar usuario
 const deleteUserService = (id, callback) => deleteUserModel(id, callback);
 
 module.exports = {

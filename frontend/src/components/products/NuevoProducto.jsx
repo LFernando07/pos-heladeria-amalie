@@ -1,9 +1,9 @@
 import { useCallback, useMemo, useState, memo } from "react";
 import { useNavigate } from "react-router";
 import { SuccessToast } from "../shared/SuccessToast";
-import logo from "../../../images/logo_amelie.png";
 import { useProducts } from "../../context/ProductsContext";
 import { useCategories } from "../../context/CategoryContext";
+import logo from "../../assets/logo_amelie.png";
 import "./NuevoProducto.css";
 
 export const NuevoProducto = memo(() => {
@@ -17,15 +17,12 @@ export const NuevoProducto = memo(() => {
   const [showSuccessToast, setShowSuccessToast] = useState(false);
   const navigate = useNavigate();
 
-  // ✅ Memoizamos handlers para evitar recrearlos en cada render
   const handleNombre = useCallback((e) => setNombre(e.target.value), []);
   const handlePrecio = useCallback((e) => setPrecio(e.target.value), []);
   const handleCategoria = useCallback((e) => setCategoria(e.target.value), []);
   const handleImagen = useCallback((e) => setImagen(e.target.files[0]), []);
-
   const handleCancelar = useCallback(() => navigate("/dashboard"), [navigate]);
 
-  // ✅ Memoizamos la lista de opciones de categorías
   const categoriasOptions = useMemo(
     () =>
       categories.map((cat) => (
@@ -36,10 +33,10 @@ export const NuevoProducto = memo(() => {
     [categories]
   );
 
-  // ✅ Memoizamos el submit
   const handleSubmit = useCallback(
     async (e) => {
       e.preventDefault();
+      setError("");
 
       if (!nombre || !precio || categoria === -1 || !imagen) {
         setError("Por favor, completa todos los campos y añade una imagen.");
@@ -59,7 +56,8 @@ export const NuevoProducto = memo(() => {
           navigate("/dashboard/products");
         }, 2000);
       } catch (err) {
-        setError(err.message);
+        console.error("Error creando producto:", err);
+        setError(err?.response?.data?.message || "Error al crear el producto.");
       }
     },
     [categoria, imagen, navigate, newProduct, nombre, precio]
@@ -67,7 +65,11 @@ export const NuevoProducto = memo(() => {
 
   return (
     <div className="form-container">
-      <form onSubmit={handleSubmit} className="product-form">
+      <form
+        onSubmit={handleSubmit}
+        className="product-form"
+        encType="multipart/form-data"
+      >
         <img src={logo} className="Logo Amelie" width={96} height={96} />
         <h2>Dar de Alta un Nuevo Producto</h2>
 
@@ -97,7 +99,7 @@ export const NuevoProducto = memo(() => {
         <div className="form-group">
           <label htmlFor="categoria">Categoría:</label>
           <select id="categoria" value={categoria} onChange={handleCategoria}>
-            <option value={-1}>Selecciona una categoría (!)</option>
+            <option value={-1}>Selecciona una categoría</option>
             {categoriasOptions}
           </select>
         </div>
@@ -107,7 +109,7 @@ export const NuevoProducto = memo(() => {
           <input
             type="file"
             id="imagen"
-            accept="image/png, image/jpg"
+            accept="image/png, image/jpg, image/jpeg"
             onChange={handleImagen}
             required
           />

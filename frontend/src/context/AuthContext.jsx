@@ -1,87 +1,190 @@
-import React, {
+import {
   createContext,
+  useContext,
   useState,
   useEffect,
-  useContext,
   useCallback,
   useMemo,
 } from "react";
 import { useNavigate } from "react-router";
-import { API_URL } from "../config/api";
+import {
+  loginUser,
+  logoutUser,
+  verifyToken,
+  getAllUsers,
+  getUserById,
+  createUser,
+  updateUser,
+  deleteUser,
+} from "../services/users.service.js";
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  // ✅ Memoizamos la función para mantener su referencia estable
-  const fetchMe = useCallback(async () => {
+  /* =========================================================
+     Al montar, verificar sesión con el token guardado
+  ========================================================= */
+  const checkSession = useCallback(async () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      setLoading(false);
+      return;
+    }
+
     try {
-      const res = await fetch(`${API_URL}/api/employees/me`, {
-        credentials: "include",
-      });
-      if (!res.ok) {
-        setUser(null);
-      } else {
-        const json = await res.json();
-        setUser(json.data);
-      }
-    } catch {
+      const data = await verifyToken(token);
+      setUser(data.user || null);
+    } catch (err) {
+      console.error("Error verificando token:", err);
+      localStorage.removeItem("token");
       setUser(null);
     } finally {
       setLoading(false);
     }
   }, []);
 
-  // Solo se ejecuta una vez al montar
   useEffect(() => {
-    fetchMe();
-  }, [fetchMe]);
+    checkSession();
+  }, [checkSession]);
 
-  // ✅ Memoizamos login
+  /* =========================================================
+     LOGIN
+  ========================================================= */
   const login = useCallback(
-    async (usuario, password) => {
-      const res = await fetch(`${API_URL}/api/employees/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({ usuario, password }),
-      });
-      const json = await res.json();
-      if (!res.ok) throw new Error(json.error || "Login failed");
-      setUser(json.data);
-      navigate("/");
+    async (credentials) => {
+      try {
+        setError(null);
+        const data = await loginUser(credentials); // { token, user }
+        localStorage.setItem("token", data.token);
+        setUser(data.user);
+        navigate("/");
+      } catch (err) {
+        console.error("Error en login:", err);
+        setError(err.message);
+        throw err;
+      }
     },
     [navigate]
   );
 
-  // ✅ Memoizamos logout
+  /* =========================================================
+     LOGOUT
+  ========================================================= */
   const logout = useCallback(async () => {
-    await fetch(`${API_URL}/api/employees/logout`, {
-      method: "POST",
-      credentials: "include",
-    });
-    setUser(null);
+    try {
+      await logoutUser();
+    } catch (err) {
+      console.warn("Logout falló (continuando):", err);
+    } finally {
+      localStorage.removeItem("token");
+      setUser(null);
+    }
   }, []);
 
-  // ✅ Memoizamos el value del contexto
+  /* =========================================================
+     CRUD DE USUARIOS
+  ========================================================= */
+  const fetchUsers = useCallback(async () => {
+    try {
+      const users = await getAllUsers();
+      setUsers(users);
+    } catch (err) {
+      setError(err.message);
+      throw err;
+    }
+  }, []);
+
+  const fetchUserById = useCallback(async (id) => {
+    try {
+      const user = await getUserById(id);
+      return user;
+    } catch (err) {
+      setError(err.message);
+      throw err;
+    }
+  }, []);
+
+  const register = useCallback(
+    async (userData) => {
+      try {
+        await createUser(userData);
+        navigate("/dashboard/users");
+      } catch (err) {
+        setError(err.message);
+        throw err;
+      }
+    },
+    [navigate]
+  );
+
+  const modifyUser = useCallback(async (id, userData) => {
+    try {
+      const user = await updateUser(id, userData);
+      return user;
+    } catch (err) {
+      setError(err.message);
+      throw err;
+    }
+  }, []);
+
+  const removeUser = useCallback(async (id) => {
+    try {
+      const response = await deleteUser(id);
+      return response;
+    } catch (err) {
+      setError(err.message);
+      throw err;
+    }
+  }, []);
+
+  /* =========================================================
+     VALORES EXPUESTOS AL CONTEXTO
+  ========================================================= */
   const value = useMemo(
     () => ({
       user,
-      setUser,
       loading,
+      error,
+      users,
+      setUsers,
       login,
       logout,
-      refresh: fetchMe,
+      fetchUsers,
+      fetchUserById,
+      register,
+      modifyUser,
+      removeUser,
     }),
-    [user, loading, login, logout, fetchMe]
+    [
+      user,
+      loading,
+      error,
+      users,
+      login,
+      logout,
+      fetchUsers,
+      fetchUserById,
+      register,
+      modifyUser,
+      removeUser,
+    ]
   );
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={value}>
+      {!loading && children}
+    </AuthContext.Provider>
+  );
 };
 
-// Hook para consumir el contexto
+/* =========================================================
+   Hook personalizado para usar el contexto
+========================================================= */
 // eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => useContext(AuthContext);

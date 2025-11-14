@@ -5,8 +5,11 @@ import { SuccessToast } from "../shared/SuccessToast";
 import { AiOutlineFolderAdd } from "react-icons/ai";
 import { FaEdit, FaTrashAlt } from "react-icons/fa";
 import "./CategoryManagement.css";
+import { useAuth } from "../../context/AuthContext";
 
 const CategoryManagement = () => {
+  const { user } = useAuth();
+
   const {
     categories,
     loading,
@@ -120,7 +123,7 @@ const CategoryManagement = () => {
           <tr>
             <th>ID</th>
             <th>Nombre</th>
-            <th>Acciones</th>
+            {user.rol === "admin" && <th>Acciones</th>}
           </tr>
         </thead>
         <tbody>
@@ -132,26 +135,28 @@ const CategoryManagement = () => {
               <td data-label="Nombre">
                 <span className="category-name">{category.nombre}</span>
               </td>
-              <td data-label="Acciones" className="category-actions">
-                <button
-                  className="btn-edit-cat"
-                  onClick={() => openEditModal(category)}
-                >
-                  <FaEdit /> Editar
-                </button>
-                <button
-                  className="btn-delete-cat"
-                  onClick={() => openDeleteModal(category)}
-                >
-                  <FaTrashAlt /> Eliminar
-                </button>
-              </td>
+              {user.rol === "admin" && (
+                <td data-label="Acciones" className="category-actions">
+                  <button
+                    className="btn-edit-cat"
+                    onClick={() => openEditModal(category)}
+                  >
+                    <FaEdit /> Editar
+                  </button>
+                  <button
+                    className="btn-delete-cat"
+                    onClick={() => openDeleteModal(category)}
+                  >
+                    <FaTrashAlt /> Eliminar
+                  </button>
+                </td>
+              )}
             </tr>
           ))}
         </tbody>
       </table>
     );
-  }, [categories, openEditModal, openDeleteModal]);
+  }, [categories, openEditModal, openDeleteModal, user]);
 
   if (loading)
     return <div className="category-loading">Cargando categorías...</div>;
@@ -199,7 +204,7 @@ const CategoryManagement = () => {
               <button onClick={closeEditModal} className="btn-cancel">
                 Cancelar
               </button>
-              <button onClick={confirmEdit} className="btn-confirm">
+              <button onClick={confirmEdit} className="btn-confirm-cat">
                 Guardar Cambios
               </button>
             </div>
@@ -233,7 +238,7 @@ const CategoryManagement = () => {
               <button onClick={closeDeleteModal} className="btn-cancel">
                 Cancelar
               </button>
-              <button onClick={confirmDelete} className="btn-confirm delete">
+              <button onClick={confirmDelete} className="btn-delete-cat">
                 Sí, eliminar
               </button>
             </div>

@@ -1,46 +1,51 @@
 const { app, BrowserWindow } = require("electron");
 const path = require("path");
-const { spawn } = require("child_process");
+const isDev = process.env.NODE_ENV === "development";
 
-let backendProcess;
+// Iniciar servidor Express
+require("../backend/index.js");
 
-function startBackend() {
-  backendProcess = spawn("node", ["backend/index.js"], {
-    cwd: path.join(__dirname, ".."),
-    shell: true,
-    env: { ...process.env, PORT: 5000 },
-  });
-
-  backendProcess.stdout.on("data", (data) => {
-    console.log(`Backend: ${data}`);
-  });
-
-  backendProcess.stderr.on("data", (data) => {
-    console.error(`Backend error: ${data}`);
-  });
-}
+let mainWindow;
 
 function createWindow() {
-  const win = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 1400,
-    height: 900,
-    resizable: false,
+    height: 800,
     webPreferences: {
-      preload: path.join(__dirname, "preload.js"),
       nodeIntegration: false,
       contextIsolation: true,
+      enableRemoteModule: false,
     },
+    icon: path.join(__dirname, "assets/logo_amelie.ico"),
+    title: "POS Heladeria Amelie",
   });
 
-  win.loadFile(path.join(__dirname, "../frontend/dist/index.html"));
+  // Cargar la aplicación
+  const startUrl = isDev
+    ? "http://localhost:5173"
+    : `file://${path.join(__dirname, "../frontend/dist/index.html")}`;
+
+  mainWindow.loadURL(startUrl);
+
+  if (isDev) {
+    mainWindow.webContents.openDevTools();
+  }
+
+  mainWindow.on("closed", () => {
+    mainWindow = null;
+  });
 }
 
-app.whenReady().then(() => {
-  startBackend();
-  createWindow();
-});
+app.whenReady().then(createWindow);
 
 app.on("window-all-closed", () => {
-  if (backendProcess) backendProcess.kill();
-  if (process.platform !== "darwin") app.quit();
+  if (process.platform !== "darwin") {
+    app.quit();
+  }
+});
+
+app.on("activate", () => {
+  if (BrowserWindow.getAllWindows().length === 0) {
+    createWindow();
+  }
 });

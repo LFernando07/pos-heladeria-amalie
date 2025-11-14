@@ -1,28 +1,30 @@
 const jwt = require("jsonwebtoken");
 const { JWT_SECRET } = require("../modules/employees/employees.service");
 
-// Middleware para verificar token desde cookie o header Authorization
 function verifyTokenMiddleware(req, res, next) {
-  const token =
-    req.cookies?.token || req.header("Authorization")?.replace("Bearer ", "");
-  if (!token)
-    return res.status(401).json({ success: false, error: "No autorizado" });
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1]; // Bearer TOKEN
 
-  jwt.verify(token, JWT_SECRET, (err, payload) => {
-    if (err)
-      return res.status(401).json({ success: false, error: "Token inválido" });
-    req.user = payload;
+  if (!token) {
+    return res.status(401).json({ error: "Token no proporcionado" });
+  }
+
+  jwt.verify(token, JWT_SECRET, (err, user) => {
+    if (err) {
+      return res.status(403).json({ error: "Token inválido o expirado" });
+    }
+    req.user = user;
     next();
   });
 }
 
-// Middleware para roles: requireRole('admin')
 function requireRole(role) {
   return (req, res, next) => {
-    if (!req.user)
-      return res.status(401).json({ success: false, error: "No autorizado" });
-    if (req.user.rol !== role)
-      return res.status(403).json({ success: false, error: "Acceso denegado" });
+    if (!req.user || req.user.rol !== role) {
+      return res
+        .status(403)
+        .json({ error: "Acceso denegado. Solo administradores." });
+    }
     next();
   };
 }

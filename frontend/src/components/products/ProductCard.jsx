@@ -1,8 +1,12 @@
 import { memo, useCallback } from "react";
 import "./ProductCard.css";
+import { API_URL } from "../../config/api";
 
 const ProductCard = ({ producto, onBuy }) => {
-  const imagenProducto = producto.imagen || "./images/placeholder.png";
+  const imagenProducto = producto.imagen.substring(
+    1,
+    producto.imagen.toString().length
+  );
 
   // ✅ useCallback evita recrear la función en cada render
   const handleClick = useCallback(() => {
@@ -13,7 +17,7 @@ const ProductCard = ({ producto, onBuy }) => {
     <div className="product-card" onClick={handleClick}>
       <div className="image-container">
         <img
-          src={imagenProducto}
+          src={API_URL + imagenProducto}
           alt={producto.nombre}
           className="product-image"
         />

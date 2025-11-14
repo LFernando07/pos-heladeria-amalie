@@ -13,7 +13,7 @@ import {
 import { Modal } from "../shared/Modal";
 import { SuccessToast } from "../shared/SuccessToast";
 import * as XLSX from "xlsx";
-import logo from "../../../images/logo_amelie.png";
+import logo from "../../assets/logo_amelie.png";
 import "./ReportsManagement.css";
 
 const ReportsManagement = () => {

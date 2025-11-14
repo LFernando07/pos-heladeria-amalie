@@ -20,8 +20,13 @@ export const getProductById = async (id) => {
 };
 
 export const updateProduct = async (id, productData) => {
-  const response = await api.put(`/productos/${id}`, productData);
-  return response;
+  const response = await fetch(`${API_URL}/api/productos/${id}`, {
+    method: "PUT",
+    body: productData, // FormData (no se agrega Content-Type)
+  });
+  if (!response.ok)
+    throw new Error("Ocurrió un error al modificar el producto.");
+  return await response.json();
 };
 
 export const deleteProduct = async (id) => {

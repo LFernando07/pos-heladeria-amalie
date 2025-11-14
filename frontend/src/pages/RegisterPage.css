@@ -1,0 +1,321 @@
+:root {
+  --amelie-primary: #ff7e5f;
+  --amelie-secondary: #feb47b;
+  --amelie-accent: #ffd18c;
+  --amelie-dark: #3a2e39;
+  --amelie-white: #ffffff;
+  --amelie-light-gray: #f4f4f7;
+  --amelie-border: #e9e9f0;
+  --bg-color-1: #6a82fb;
+  --bg-color-2: #fc5c7d;
+}
+
+/* --- FONDO ESPECÍFICO PARA LOGIN --- */
+.login-page-background {
+  margin: 0;
+  font-family: "Poppins", sans-serif;
+  background: linear-gradient(
+    160deg,
+    var(--bg-color-1) 0%,
+    var(--bg-color-2) 100%
+  );
+  min-height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+}
+
+.background-shapes {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* Estilo base para las formas tipo "cometa" */
+.shape {
+  position: absolute;
+  border-radius: 50px;
+  background: linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.2),
+    rgba(255, 255, 255, 0)
+  );
+  filter: blur(1px);
+}
+
+/* Posición y tamaño de cada forma */
+.shape.shape-1 {
+  width: 250px;
+  height: 40px;
+  transform: rotate(-35deg);
+  top: 15%;
+  left: -5%;
+}
+
+.shape.shape-2 {
+  width: 300px;
+  height: 50px;
+  transform: rotate(-35deg);
+  top: 30%;
+  left: 10%;
+  background: linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.3),
+    rgba(255, 255, 255, 0.05)
+  );
+}
+
+.shape.shape-3 {
+  width: 200px;
+  height: 30px;
+  transform: rotate(-35deg);
+  bottom: 20%;
+  right: -3%;
+}
+
+.shape.shape-4 {
+  width: 150px;
+  height: 25px;
+  transform: rotate(-35deg);
+  bottom: 10%;
+  right: 5%;
+  background: linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.1),
+    rgba(255, 255, 255, 0)
+  );
+}
+
+/* --- CONTENEDOR PRINCIPAL DEL LOGIN --- */
+.login-container-card {
+  width: 400px;
+  background: var(--amelie-white);
+  border-radius: 20px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  z-index: 2;
+}
+
+/* --- CABECERA GRÁFICA --- */
+.login-header {
+  background: linear-gradient(45deg, #f92b7b, #f17c58);
+  padding: 15px 20px 15px 20px;
+  color: var(--amelie-white);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.header-content {
+  position: relative;
+  z-index: 2;
+}
+
+/* ESTILOS ACTUALIZADOS PARA EL LOGO */
+.header-logo {
+  margin-bottom: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.logo-image {
+  max-width: 80px;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  background: rgba(255, 255, 255, 0.1);
+  padding: 8px;
+}
+
+.header-content h1 {
+  font-size: 1.2em;
+  margin: 0 0 4px 0;
+  font-weight: 600;
+}
+
+.header-content p {
+  font-size: 0.9em;
+  opacity: 0.9;
+  margin: 0;
+  font-weight: 300;
+}
+
+/* Formas abstractas dentro de la cabecera */
+.header-shape {
+  position: absolute;
+  background-color: rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+  z-index: 1;
+}
+.header-shape.shape-1 {
+  width: 100px;
+  height: 100px;
+  top: -30px;
+  left: -30px;
+  transform: rotate(45deg);
+}
+.header-shape.shape-2 {
+  width: 120px;
+  height: 120px;
+  bottom: -50px;
+  right: -40px;
+  transform: rotate(60deg);
+}
+.header-shape.shape-3 {
+  width: 20px;
+  height: 20px;
+  top: 40px;
+  right: 30px;
+  transform: rotate(30deg);
+  border-radius: 50%;
+}
+
+/* --- ÁREA DEL FORMULARIO --- */
+.login-form-area {
+  padding: 15px 30px;
+  text-align: center;
+}
+
+.login-form-area h2 {
+  font-size: 1.1em;
+  font-weight: 600;
+  color: var(--amelie-dark);
+  margin: 0 0 30px 0;
+  letter-spacing: 0.5px;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* --- INPUTS ESTILO PÍLDORA --- */
+.input-group {
+  display: flex;
+  align-items: center;
+  background-color: var(--amelie-light-gray);
+  border-radius: 50px;
+  border: 1px solid var(--amelie-border);
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.input-group:focus-within {
+  border-color: var(--amelie-primary);
+  box-shadow: 0 0 0 3px rgba(255, 126, 95, 0.2);
+}
+
+.input-icon-wrapper {
+  width: 45px;
+  height: 45px;
+  flex-shrink: 0;
+  margin: 2px;
+  border-radius: 50%;
+  background: linear-gradient(45deg, #f92b7b, #f17c58);
+  color: var(--amelie-white);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.2em;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.input-group input {
+  border: none;
+  background: transparent;
+  outline: none;
+  width: 100%;
+  padding: 10px 15px 10px 5px;
+  font-size: 1em;
+  color: var(--amelie-dark);
+  font-family: "Poppins", sans-serif;
+}
+
+.input-group input::placeholder {
+  color: #999;
+}
+
+/* --- BOTÓN Y TEXTO FINAL --- */
+.register-button,
+.register-to-back {
+  min-width: calc(50%);
+  border: none;
+  padding: 15px;
+  border-radius: 50px;
+  background: linear-gradient(90deg, #f92b7b, #f17c58);
+  color: var(--amelie-white);
+  font-family: "Poppins", sans-serif;
+  font-size: 1em;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  margin-top: 10px;
+  box-shadow: 0 5px 15px rgba(249, 43, 123, 0.3);
+  transition: transform 0.2s, box-shadow 0.2s, filter 0.2s;
+}
+
+.register-to-back {
+  min-width: calc(40%);
+  text-decoration: none;
+}
+
+.register-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(249, 43, 123, 0.4);
+  filter: brightness(1.1);
+}
+
+.login-error-message {
+  color: #d93025;
+  font-size: 0.9em;
+  text-align: center;
+  margin-top: -10px;
+  margin-bottom: 15px;
+}
+
+.form-footer {
+  margin-top: 30px;
+  font-size: 0.85em;
+  color: #aaa;
+}
+
+.register-actions {
+  display: flex;
+  width: 100%;
+  gap: 8px;
+  justify-content: center;
+  align-items: center;
+}
+
+/* --- RESPONSIVIDAD PARA MÓVILES --- */
+@media (max-width: 480px) {
+  .login-container-card {
+    width: 90%;
+  }
+
+  .login-form-area {
+    padding: 30px 25px;
+  }
+
+  .logo-image {
+    max-width: 100px;
+  }
+
+  .login-header {
+    padding: 25px 25px 35px 25px;
+  }
+}

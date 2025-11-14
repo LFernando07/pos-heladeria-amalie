@@ -1,45 +1,10 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
-import {
-  copyFileSync,
-  mkdirSync,
-  readdirSync,
-  statSync,
-  readFileSync,
-  writeFileSync,
-} from "fs";
-import { join } from "path";
+import { readFileSync, writeFileSync } from "fs";
 
 export default defineConfig({
   plugins: [
     react(),
-    {
-      name: "copy-images",
-      closeBundle() {
-        const srcDir = "images";
-        const destDir = "dist/images";
-        try {
-          mkdirSync(destDir, { recursive: true });
-          const copyRecursive = (src, dest) => {
-            const entries = readdirSync(src);
-            entries.forEach((entry) => {
-              const srcPath = join(src, entry);
-              const destPath = join(dest, entry);
-              if (statSync(srcPath).isDirectory()) {
-                mkdirSync(destPath, { recursive: true });
-                copyRecursive(srcPath, destPath);
-              } else {
-                copyFileSync(srcPath, destPath);
-              }
-            });
-          };
-          copyRecursive(srcDir, destDir);
-          console.log("✅ Imágenes copiadas a dist/");
-        } catch (err) {
-          console.error("❌ Error copiando imágenes:", err);
-        }
-      },
-    },
     {
       name: "fix-paths",
       closeBundle() {
@@ -62,7 +27,21 @@ export default defineConfig({
     },
   ],
   base: "./",
-  server: { port: 5173, strictPort: true, host: true },
+  server: {
+    port: 5173,
+    strictPort: true,
+    host: true,
+    proxy: {
+      "/api": {
+        target: "http://localhost:5000", // <- tu backend
+        changeOrigin: true,
+      },
+      "/images": {
+        target: "http://localhost:5000", // <- sirve las imágenes desde backend
+        changeOrigin: true,
+      },
+    },
+  },
   build: {
     outDir: "dist",
     emptyOutDir: true,
