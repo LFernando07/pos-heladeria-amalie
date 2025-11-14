@@ -11,8 +11,8 @@ const {
   deleteUserModel,
 } = require("./employees.model");
 
-const JWT_SECRET = process.env.JWT_SECRET || "tu_clave_secreta_super_segura";
-const JWT_EXPIRES = process.env.JWT_EXPIRES || "24h";
+const JWT_SECRET = process.env.JWT_SECRET;
+const JWT_EXPIRES = process.env.JWT_EXPIRES;
 
 // =======================================================
 // 🧠 Servicios

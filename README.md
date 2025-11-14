@@ -28,14 +28,16 @@ Sistema Punto de Venta de escritorio para la gestión integral de una heladería
 
 [![Technologies Used](https://skillicons.dev/icons?i=vite,react,express,sqlite,electron,css)](https://skillicons.dev)
 
-<details><summary><b>Estructura del proyecto</b></summary>
+<details>
+<summary><b>Estructura del proyecto</b></summary>
+
+```bash
 pos-heladeria-amalie/
 ├── .github/
 │   ├── readme_assets/
 │   │   └── heladeria_amelie.png
 ├── assets/
 │   ├── logo_amelie.ico
-│   └── images/
 ├── backend/
 │   ├── images/
 │   │   └── sabores/
@@ -95,6 +97,7 @@ pos-heladeria-amalie/
 ├── package-lock.json
 ├── package.json
 └── README.md
+```
 
 </details>
 
