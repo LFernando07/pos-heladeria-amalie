@@ -1,0 +1,235 @@
+/* --- ESTILOS DEL MODAL --- */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.tipo-container {
+  width: 100%;
+  max-width: 800px;
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  animation: aparecer 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+@keyframes aparecer {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* --- TÍTULO --- */
+.tipo-container .titulo {
+  text-align: center;
+  background: linear-gradient(135deg, #ff7e5f, #feb47b);
+  color: white;
+  padding: 1rem 1.5rem;
+  border-radius: 20px 20px 0 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* --- GRID DE SABORES --- */
+.tipo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1.5rem; /* Más espacio */
+  padding: 1.5rem;
+  max-height: 50vh;
+  overflow-y: auto;
+}
+
+/* --- TARJETA DE SABOR INTERACTIVA --- */
+.tipo-card {
+  background: #ffffff;
+  border-radius: 12px;
+  border: 2px solid #f0f0f0;
+  padding: 1rem;
+  text-align: center;
+  cursor: pointer;
+  position: relative;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.tipo-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+}
+
+/* Ocultamos el checkbox, pero lo mantenemos para que el sistema sepa si está seleccionado */
+.tipo-card input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* Estilo cuando la tarjeta está seleccionada */
+.tipo-card.selected {
+  border-color: #ff7e5f;
+  box-shadow: 0 0 0 3px rgba(255, 126, 95, 0.2);
+}
+
+.tipo-card.selected::after {
+  content: "✔";
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 24px;
+  height: 24px;
+  background-color: #ff7e5f;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.tipo-card img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-bottom: 10px;
+}
+.tipo-card .nombre {
+  font-weight: 600;
+  font-size: 1rem;
+  color: #333;
+}
+.tipo-card .precio {
+  font-size: 0.9rem;
+  color: #ff6b6b;
+  font-weight: bold;
+}
+
+/* --- OPCIÓN DE COBERTURA (INTERRUPTOR) --- */
+.opcion {
+  margin: 0 1.5rem 1.5rem;
+  padding: 1rem 1.25rem;
+  background: #fff5f2;
+  border-radius: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+}
+.opcion-label {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #444;
+}
+
+/* Ocultamos el checkbox original */
+.opcion input[type="checkbox"] {
+  height: 0;
+  width: 0;
+  visibility: hidden;
+}
+
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 28px;
+  flex-shrink: 0; /* Evita que el switch se encoja */
+}
+.toggle-switch .slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 28px;
+}
+.toggle-switch .slider:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+.opcion input:checked ~ .toggle-switch .slider {
+  background-color: #ff7e5f;
+}
+.opcion input:checked ~ .toggle-switch .slider:before {
+  transform: translateX(22px);
+}
+
+/* --- BOTONES DE ACCIÓN --- */
+.actions {
+  display: flex;
+  gap: 1rem;
+  padding: 1.5rem;
+  background: #f8f9fa;
+  border-top: 1px solid #eee;
+  border-radius: 0 0 20px 20px;
+}
+.actions button {
+  flex: 1;
+  padding: 16px;
+  border-radius: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.25s ease-in-out;
+  font-size: 1rem;
+  border: 2px solid transparent;
+}
+.actions .back-button {
+  background-color: #fff;
+  border-color: #ddd;
+  color: #555;
+}
+.actions .back-button:hover {
+  background-color: #f8f9fa;
+  border-color: #aaa;
+  color: #333;
+}
+.actions button:first-child {
+  background: linear-gradient(135deg, #ff7e5f, #feb47b);
+  color: white;
+  box-shadow: 0 4px 15px rgba(254, 180, 123, 0.4);
+}
+.actions button:first-child:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(255, 126, 95, 0.5);
+}
+
+.actions .flavours-sucess:hover {
+  background-color: rgb(0, 255, 21);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(255, 126, 95, 0.5);
+}

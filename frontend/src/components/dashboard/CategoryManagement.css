@@ -1,0 +1,440 @@
+/* Contenedor principal */
+.category-container {
+  padding: 2rem;
+  background: linear-gradient(135deg, #fef9f3 0%, #fff 100%);
+  min-height: 100vh;
+}
+
+/* Header */
+.category-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 3px solid #f7cac9;
+}
+
+.category-header h1 {
+  font-size: 2rem;
+  color: #dc143c;
+  font-weight: 700;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.category-header h1::before {
+  content: "";
+  font-size: 2.5rem;
+}
+
+/* Formulario de nueva categoría */
+.add-category-form {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  border-left: 4px solid #f75270;
+}
+
+.add-category-form input {
+  flex-grow: 1;
+  padding: 0.875rem 1.25rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.add-category-form input:focus {
+  outline: none;
+  border-color: #f75270;
+  box-shadow: 0 0 0 3px rgba(247, 82, 112, 0.1);
+}
+
+.add-category-form input::placeholder {
+  color: #aaa;
+}
+
+.btn-add-category {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.875rem 1.5rem;
+  background: linear-gradient(135deg, #dc143c 0%, #f75270 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(220, 20, 60, 0.3);
+  white-space: nowrap;
+}
+
+.btn-add-category:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(220, 20, 60, 0.4);
+}
+
+.btn-add-category:active {
+  transform: translateY(0);
+}
+
+/* Tabla de categorías */
+.category-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+}
+
+.category-table thead {
+  background: linear-gradient(135deg, #dc143c 0%, #f75270 100%);
+  color: white;
+}
+
+.category-table thead th {
+  padding: 1.25rem 1rem;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.category-table tbody tr {
+  border-bottom: 1px solid #f0f0f0;
+  transition: all 0.3s ease;
+}
+
+.category-table tbody tr:hover {
+  background: linear-gradient(90deg, #fdebd0 0%, #f7cac9 20%, transparent 100%);
+  transform: scale(1.005);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.category-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.category-table tbody td {
+  padding: 1.25rem 1rem;
+  color: #333;
+  font-size: 0.95rem;
+}
+
+/* ID con badge */
+.category-id {
+  display: inline-block;
+  background: linear-gradient(135deg, #f7cac9 0%, #fdebd0 100%);
+  color: #dc143c;
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 0.875rem;
+}
+
+/* Nombre de categoría */
+.category-name {
+  font-weight: 600;
+  color: #2c3e50;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.category-name::before {
+  font-size: 1.2rem;
+}
+
+/* Botones de acción */
+.category-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.btn-edit-cat {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.625rem 1rem;
+  background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 10px rgba(52, 152, 219, 0.3);
+}
+
+.btn-edit-cat:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+}
+
+.btn-confirm-cat {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.625rem 1rem;
+  background: linear-gradient(135deg, #2abd1d 0%, #27b037 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 10px rgba(231, 76, 60, 0.3);
+}
+
+.btn-confirm-cat:hover {
+  background: linear-gradient(135deg, #2fc522 0%, #27b037 100%);
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(231, 76, 60, 0.4);
+}
+
+.btn-delete-cat {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.625rem 1rem;
+  background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 10px rgba(231, 76, 60, 0.3);
+}
+
+.btn-delete-cat:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);
+}
+
+.btn-edit-cat:active,
+.btn-delete-cat:active {
+  transform: translateY(0);
+}
+
+/* Modal de edición/eliminación */
+.category-modal-content {
+  text-align: center;
+  padding: 1rem;
+}
+
+.category-modal-content h2 {
+  color: #dc143c;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.category-modal-input {
+  width: 100%;
+  padding: 0.875rem 1.25rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.category-modal-input:focus {
+  outline: none;
+  border-color: #f75270;
+  box-shadow: 0 0 0 3px rgba(247, 82, 112, 0.1);
+}
+
+.category-modal-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.btn-cancel,
+.btn-confirm {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
+}
+
+.btn-cancel {
+  background: white;
+  color: #666;
+  border: 2px solid #ddd;
+}
+
+.btn-cancel:hover {
+  background: #f5f5f5;
+  border-color: #bbb;
+}
+
+.btn-confirm {
+  background: linear-gradient(135deg, #dc143c 0%, #f75270 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(220, 20, 60, 0.3);
+}
+
+.btn-confirm:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(220, 20, 60, 0.4);
+}
+
+.btn-confirm.delete {
+  background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+  box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+}
+
+.btn-confirm.delete:hover {
+  box-shadow: 0 6px 16px rgba(231, 76, 60, 0.4);
+}
+
+/* Estados */
+.category-loading,
+.category-error {
+  text-align: center;
+  padding: 3rem;
+  font-size: 1.2rem;
+}
+
+.category-loading {
+  color: #7f8c8d;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.category-loading::before {
+  content: "📂";
+  display: block;
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}
+
+.category-error {
+  color: #e74c3c;
+}
+
+.category-error::before {
+  content: "❌";
+  display: block;
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}
+
+/* Estado vacío */
+.empty-categories {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.empty-categories::before {
+  content: "📭";
+  display: block;
+  font-size: 5rem;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}
+
+.empty-categories p {
+  color: #7f8c8d;
+  font-size: 1.1rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .category-container {
+    padding: 1rem;
+  }
+
+  .category-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .add-category-form {
+    flex-direction: column;
+  }
+
+  .btn-add-category {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .category-table thead {
+    display: none;
+  }
+
+  .category-table tbody tr {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+    border: 1px solid #f0f0f0;
+    border-radius: 12px;
+    padding: 1rem;
+  }
+
+  .category-table tbody td {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  .category-table tbody td:last-child {
+    border-bottom: none;
+    justify-content: center;
+  }
+
+  .category-table tbody td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: #dc143c;
+  }
+
+  .category-actions {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .category-modal-buttons {
+    flex-direction: column;
+  }
+
+  .btn-cancel,
+  .btn-confirm {
+    width: 100%;
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}

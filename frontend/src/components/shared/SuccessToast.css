@@ -1,0 +1,35 @@
+/* --- ANIMACIÓN DE ÉXITO --- */
+.success-toast {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(30, 30, 30, 0.9);
+  color: white;
+  padding: 20px 30px;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  z-index: 3000;
+  animation: fade-in-out 2s forwards;
+}
+
+.success-toast p {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.success-icon {
+  width: 60px;
+  height: 60px;
+  animation: scale-in 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+.success-icon svg {
+  width: 100%;
+  height: 100%;
+  fill: #4caf50;
+}

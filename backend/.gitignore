@@ -14,6 +14,8 @@ logs/
 # OS generated files
 .DS_Store
 Thumbs.db
+*.db
+*.sqlite
 
 # Editor directories and files
 .vscode/
@@ -26,3 +28,4 @@ dist/
 build/
 coverage/
 /generated/prisma
+app/
