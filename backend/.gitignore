@@ -17,6 +17,11 @@ Thumbs.db
 *.db
 *.sqlite
 
+*.db
+*.sqlite
+*.sqlite3
+heladosamelie.db
+
 # Editor directories and files
 .vscode/
 .idea/
