@@ -102,7 +102,7 @@ export const getUserById = async (id) => {
 };
 
 export const createUser = async (userData) => {
-  const res = await fetch(`${API_URL}/api/employees`, {
+  const res = await fetch(`${API_URL}/api/employees/register`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

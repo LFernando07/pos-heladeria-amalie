@@ -15,7 +15,7 @@ module.exports = ({ upload }) => {
   routerProducts.get("/", getAllProducts);
   routerProducts.get("/:id", getProductById);
   routerProducts.post("/", upload.single("imagen"), createProduct);
-  routerProducts.put("/:id", updateProduct);
+  routerProducts.put("/:id", upload.single("imagen"), updateProduct);
   routerProducts.delete("/:id", deleteProduct);
 
   return routerProducts;

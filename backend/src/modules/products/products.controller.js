@@ -27,28 +27,19 @@ function getProductById(req, res) {
 
 // Crear un nuevo producto
 function createProduct(req, res) {
-  // Validar que existe la imagen
-  if (!req.file) {
-    return res
-      .status(400)
-      .json({ error: "¡La imagen del producto es obligatoria!" });
-  }
+  if (!req.file)
+    return res.status(400).json({ error: "Debe subir una imagen." });
 
-  const { nombre, precio, categoria_id, requiere_sabor } = req.body;
-
-  // Validar campos obligatorios
-  if (!nombre || !precio || !categoria_id) {
-    return res
-      .status(400)
-      .json({ error: "Todos los campos son obligatorios." });
-  }
+  const { nombre, precio, categoria_id, requiere_sabor = 0 } = req.body;
+  if (!nombre || !precio || !categoria_id)
+    return res.status(400).json({ error: "Faltan campos obligatorios." });
 
   const newProduct = { nombre, precio, categoria_id, requiere_sabor };
 
   createProductService(newProduct, req.file, (err, product) => {
     if (err) return res.status(500).json({ error: err.message });
     res.status(201).json({
-      message: "Producto añadido con éxito",
+      message: "Producto creado con éxito",
       success: true,
       data: product,
     });
@@ -59,7 +50,8 @@ function createProduct(req, res) {
 function updateProduct(req, res) {
   const { id } = req.params;
   const data = req.body;
-  updateProductService(id, data, (err, result) => {
+
+  updateProductService(id, data, req.file, (err, result) => {
     if (err)
       return res.status(400).json({ success: false, error: err.message });
     res.json({ success: true, message: "Producto actualizado correctamente" });
